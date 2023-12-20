@@ -7,7 +7,7 @@ public extension UIColor {
     
     convenience init(hex: String) {
         
-        var string = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        let string = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         
         var int = UInt64()
         Scanner(string: string).scanHexInt64(&int)

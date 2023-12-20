@@ -1,12 +1,16 @@
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#endif
 
 public extension Double {
 
     var int: Int { return Int(self) }
 
+    #if canImport(UIKit)
     var cgfloat: CGFloat { return CGFloat(self) }
-
+    #endif
+    
     var float: Float { return Float(self) }
 
     var number: NSNumber { return NSNumber(value: self) }
@@ -31,8 +35,10 @@ public extension Int {
 
     var double: Double { return Double(self) }
 
+    #if canImport(UIKit)
     var cgfloat: CGFloat { return CGFloat(self) }
-
+    #endif
+    
     var float: Float { return Float(self) }
 
     var uint: UInt { return UInt(self) }
@@ -72,7 +78,9 @@ public extension Float {
 
     var double: Double { return Double(self) }
 
+    #if canImport(UIKit)
     var cgfloat: CGFloat { return CGFloat(self) }
+    #endif
 
     var uint: UInt { return UInt(self) }
 
@@ -89,7 +97,9 @@ public extension String {
 
     var float: Float { return Float(self) ?? 0 }
 
+    #if canImport(UIKit)
     var cgfloat: CGFloat { return CGFloat(self.float) }
+    #endif
 
     var uint: UInt { return UInt(self) ?? 0 }
 

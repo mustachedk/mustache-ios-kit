@@ -6,8 +6,11 @@ import Combine
 // https://gist.github.com/simonbs/61c8269e1b0550feab606ee9890fa72b
 
 @available(iOS 13.0, *)
+public typealias UserDefaultC = UserDefaultCombine
+
+@available(iOS 13.0, *)
 @propertyWrapper
-public class UserDefaultC<T: Codable>: NSObject {
+public class UserDefaultCombine<T: Codable>: NSObject {
     
     public var wrappedValue: T {
         get {
@@ -52,8 +55,11 @@ public class UserDefaultC<T: Codable>: NSObject {
 }
 
 @available(iOS 13.0, *)
+public typealias UserDefaultCOptional = UserDefaultCombineOptional
+
+@available(iOS 13.0, *)
 @propertyWrapper
-public  class UserDefaultCOptional<T: Codable>: NSObject {
+public class UserDefaultCombineOptional<T: Codable>: NSObject {
     
     public var wrappedValue: T? {
         get {

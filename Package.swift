@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "MustacheKit",
-    platforms: [.iOS(.v12)],
+    platforms: [.iOS(.v12), .macOS(.v10_14)],
     products: [
         .library(
             name: "MustacheFoundation",
@@ -46,6 +46,9 @@ let package = Package(
             dependencies: ["RxSwift", "RxSwiftExt", "RxViewController", "MustacheServices", "MustacheUIKit"]),
         .target(
             name: "MustacheCombine",
-            dependencies: []),
+            dependencies: ["MustacheFoundation", "Resolver"]),
+        .testTarget(
+            name: "MustacheCombineTest",
+            dependencies: ["MustacheCombine"]),
     ]
 )
