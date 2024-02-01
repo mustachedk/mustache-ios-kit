@@ -23,7 +23,7 @@ open class RxFileSystem<Value: Codable> {
     }
     
     open var projectedValue: RxObservable<Value> {
-        return FileManager.default.observeCodable(Value.self, self.key).unwrap().startWith(self.wrappedValue)
+        return FileManager.default.observeCodable(Value.self, self.key).compactMap({ $0 }).startWith(self.wrappedValue)
     }
     
 }

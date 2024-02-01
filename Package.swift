@@ -39,7 +39,7 @@ let package = Package(
             dependencies: ["MustacheFoundation"]),
         .target(
             name: "MustacheRxSwift",
-            dependencies: ["RxSwift", "MustacheServices", "MustacheUIKit"]),
+            dependencies: ["RxSwift", .product(name: "RxCocoa", package: "RxSwift"), "MustacheServices", "MustacheUIKit"]),
         .target(
             name: "MustacheCombine",
             dependencies: ["MustacheFoundation"]),

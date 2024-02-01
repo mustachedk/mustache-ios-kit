@@ -24,7 +24,7 @@ open class RxUserDefault<Value: Codable> {
     }
     
     open var projectedValue: RxObservable<Value> {
-        return UserDefaults.standard.observeCodable(Value.self, self.key).unwrap().startWith(self.wrappedValue)
+        return UserDefaults.standard.observeCodable(Value.self, self.key).compactMap({ $0 }).startWith(self.wrappedValue)
     }
 }
 
