@@ -1,4 +1,8 @@
+
 import MapKit
+
+#if canImport(RxCocoa)
+
 import RxSwift
 import RxCocoa
 
@@ -21,3 +25,5 @@ public class RxMKMapViewDelegateProxy: DelegateProxy<MKMapView, MKMapViewDelegat
         self.register { RxMKMapViewDelegateProxy(mapView: $0) }
     }
 }
+
+#endif

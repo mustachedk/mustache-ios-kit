@@ -1,6 +1,10 @@
+
+import Foundation
+
+#if canImport(RxCocoa)
+
 import RxSwift
 import RxCocoa
-import Foundation
 
 infix operator <->
 
@@ -63,3 +67,5 @@ public func <-><T: Equatable>(left: ControlProperty<T>, right: PublishSubject<T>
 
     return Disposables.create(leftToRight, rightToLeft)
 }
+
+#endif

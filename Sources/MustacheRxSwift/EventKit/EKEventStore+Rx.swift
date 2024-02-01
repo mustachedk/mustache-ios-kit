@@ -3,8 +3,8 @@
 
 import Foundation
 import EventKit
-import RxSwift
 
+import RxSwift
 
 public extension Reactive where Base: EKEventStore {
     

@@ -1,7 +1,10 @@
 
 import Foundation
-import RxSwift
 
+#if canImport(RxCocoa)
+
+import RxSwift
+import RxCocoa
 
 public extension UserDefaults {
 
@@ -19,3 +22,5 @@ public extension UserDefaults {
     }
 
 }
+
+#endif

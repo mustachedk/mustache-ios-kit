@@ -1,5 +1,11 @@
+
 import UIKit
+
+#if canImport(RxCocoa)
+
 import RxSwift
+import RxCocoa
+
 
 public extension Reactive where Base: UIApplication {
 
@@ -39,3 +45,5 @@ public extension Reactive where Base: UIApplication {
     }
 
 }
+
+#endif

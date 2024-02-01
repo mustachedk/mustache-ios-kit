@@ -1,6 +1,9 @@
-import Foundation
-import RxSwift
+#if canImport(AVFoundation)
+
 import AVFoundation
+import Foundation
+
+import RxSwift
 
 public extension Reactive where Base: AVCaptureDevice {
     
@@ -13,3 +16,4 @@ public extension Reactive where Base: AVCaptureDevice {
         }
     }
 }
+#endif

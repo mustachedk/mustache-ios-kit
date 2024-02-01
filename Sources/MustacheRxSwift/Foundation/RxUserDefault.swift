@@ -1,6 +1,10 @@
-import Foundation
-import RxSwift
 
+import Foundation
+
+#if canImport(RxCocoa)
+
+import RxSwift
+import RxCocoa
 
 @propertyWrapper
 open class RxUserDefault<Value: Codable> {
@@ -42,3 +46,5 @@ open class RxUserDefaultOptional<Value: Codable> {
         return UserDefaults.standard.observeCodable(Value.self, self.key).startWith(self.wrappedValue)
     }
 }
+
+#endif

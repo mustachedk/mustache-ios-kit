@@ -1,4 +1,8 @@
+
 import MapKit
+
+#if canImport(RxCocoa)
+
 import RxSwift
 import RxCocoa
 
@@ -40,3 +44,5 @@ public extension Reactive where Base: MKLocalSearchCompleter {
     }
 
 }
+
+#endif

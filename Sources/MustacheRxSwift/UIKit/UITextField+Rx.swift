@@ -5,9 +5,12 @@
 //  Copyright © 2018 Krunoslav Zaher. All rights reserved.
 //
 
+import UIKit
+
+#if canImport(RxCocoa)
+
 import RxSwift
 import RxCocoa
-import UIKit
 
 public extension UITextField {
 
@@ -53,9 +56,6 @@ public extension Reactive where Base: UITextField {
 //  Copyright © 2018 Krunoslav Zaher. All rights reserved.
 //
 
-import RxSwift
-import RxCocoa
-import UIKit
 
 open class RxTextFieldDelegateProxy: DelegateProxy<UITextField, UITextFieldDelegate>, DelegateProxyType, UITextFieldDelegate {
     
@@ -91,4 +91,6 @@ open class RxTextFieldDelegateProxy: DelegateProxy<UITextField, UITextFieldDeleg
         return forwardToDelegate()?.textFieldShouldClear?(textField) ?? true
     }
 }
+
+#endif
 

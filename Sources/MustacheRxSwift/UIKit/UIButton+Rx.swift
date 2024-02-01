@@ -1,7 +1,11 @@
+
 import Foundation
 import UIKit
-import RxSwift
 
+#if canImport(RxCocoa)
+
+import RxSwift
+import RxCocoa
 
 public extension Reactive where Base: UIButton {
 
@@ -18,3 +22,5 @@ public extension Reactive where Base: UIButton {
         return boolObservable
     }
 }
+
+#endif

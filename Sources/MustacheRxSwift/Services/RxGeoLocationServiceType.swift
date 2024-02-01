@@ -1,11 +1,14 @@
+
 import Foundation
 import UIKit
 import CoreLocation
+
 import MustacheServices
 
-import RxSwift
-import RxSwiftExt
+#if canImport(RxCocoa)
 
+import RxSwift
+import RxCocoa
 
 public protocol RxGeoLocationServiceType {
 
@@ -66,3 +69,5 @@ public class RxGeoLocationService: RxGeoLocationServiceType {
 
     }
 }
+
+#endif

@@ -1,6 +1,7 @@
-import Foundation
-import RxSwift
 
+import Foundation
+
+import RxSwift
 
 public extension ObservableType {
 

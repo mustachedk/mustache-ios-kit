@@ -1,6 +1,10 @@
 
 import Foundation
+
+#if canImport(RxCocoa)
+
 import RxSwift
+import RxCocoa
 
 @propertyWrapper
 open class RxFileSystem<Value: Codable> {
@@ -43,3 +47,5 @@ open class RxFileSystemOptional<Value: Codable> {
     }
     
 }
+
+#endif

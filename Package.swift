@@ -25,11 +25,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/hmlongco/Resolver.git", exact: "1.5.0"),
-        .package(url: "https://github.com/onevcat/Kingfisher.git", exact: "7.7.0"),
-        .package(url: "https://github.com/SnapKit/SnapKit.git", exact: "5.6.0"),
         .package(url: "https://github.com/ReactiveX/RxSwift.git", exact: "6.6.0"),
-        .package(url: "https://github.com/RxSwiftCommunity/RxSwiftExt.git", exact: "6.2.0"),
-        .package(url: "https://github.com/mustachedk/RxViewController.git", exact: "2.0.1"),
     ],
     targets: [
         .target(
@@ -40,13 +36,13 @@ let package = Package(
             dependencies: ["MustacheFoundation", "Resolver"]),
         .target(
             name: "MustacheUIKit",
-            dependencies: ["MustacheFoundation", "Kingfisher", "SnapKit"]),
+            dependencies: ["MustacheFoundation"]),
         .target(
             name: "MustacheRxSwift",
-            dependencies: ["RxSwift", "RxSwiftExt", "RxViewController", "MustacheServices", "MustacheUIKit"]),
+            dependencies: ["RxSwift", "MustacheServices", "MustacheUIKit"]),
         .target(
             name: "MustacheCombine",
-            dependencies: ["MustacheFoundation", "Resolver"]),
+            dependencies: ["MustacheFoundation"]),
         .testTarget(
             name: "MustacheCombineTest",
             dependencies: ["MustacheCombine"]),

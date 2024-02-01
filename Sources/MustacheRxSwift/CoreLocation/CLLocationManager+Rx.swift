@@ -1,4 +1,9 @@
+#if canImport(CoreLocation)
+
 import CoreLocation
+
+#if canImport(RxCocoa)
+
 import RxSwift
 import RxCocoa
 
@@ -230,3 +235,7 @@ fileprivate func castOptionalOrThrow<T>(_ resultType: T.Type, _ object: Any) thr
 public enum RxCLLocationManagerError: Swift.Error {
     case castingError(object: Any, targetType: Any.Type)
 }
+
+#endif
+
+#endif

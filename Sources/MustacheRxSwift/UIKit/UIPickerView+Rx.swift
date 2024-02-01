@@ -1,14 +1,17 @@
-import UIKit
-import RxSwift
-import RxSwiftExt
 
+import UIKit
+
+#if canImport(RxCocoa)
+
+import RxSwift
+import RxCocoa
 
 public extension Reactive where Base: UIPickerView {
 
     func selected<T>(_ modelType: T.Type) -> RxObservable<T> {
         return self.modelSelected(T.self)
                 .map { models -> T? in return models.first }
-                .unwrap()
+                .compactMap { $0 }
     }
 
     func selectedModel<T>() throws -> T {
@@ -18,3 +21,5 @@ public extension Reactive where Base: UIPickerView {
     }
 
 }
+
+#endif
