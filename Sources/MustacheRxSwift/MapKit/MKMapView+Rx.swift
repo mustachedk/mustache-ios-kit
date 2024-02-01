@@ -250,3 +250,24 @@ public extension Reactive where Base: MKMapView {
         })
     }
 }
+
+
+fileprivate func castOrThrow<T>(_ resultType: T.Type, _ object: Any) throws -> T {
+    guard let returnValue = object as? T else {
+        throw RxCocoaError.castingError(object: object, targetType: resultType)
+    }
+
+    return returnValue
+}
+
+fileprivate func castOptionalOrThrow<T>(_ resultType: T.Type, _ object: Any) throws -> T? {
+    if NSNull().isEqual(object) {
+        return nil
+    }
+
+    guard let returnValue = object as? T else {
+        throw RxCocoaError.castingError(object: object, targetType: resultType)
+    }
+
+    return returnValue
+}
