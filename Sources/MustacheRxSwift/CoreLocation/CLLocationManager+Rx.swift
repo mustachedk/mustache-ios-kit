@@ -24,7 +24,7 @@ public extension Reactive where Base: CLLocationManager {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                         .locationManager(_:didUpdateLocations:)))
                 .map { a in
-                    return try castOrThrow([CLLocation].self, a[1])
+                    return try castOrThrow([CLLocation].self, a[1] as AnyObject)
                 }
     }
 
@@ -34,7 +34,7 @@ public extension Reactive where Base: CLLocationManager {
     var didFailWithError: RxObservable<NSError> {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate.locationManager(_:didFailWithError:)))
                 .map { a in
-                    return try castOrThrow(NSError.self, a[1])
+                    return try castOrThrow(NSError.self, a[1] as AnyObject)
                 }
     }
 
@@ -45,7 +45,7 @@ public extension Reactive where Base: CLLocationManager {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                         .locationManager(_:didFinishDeferredUpdatesWithError:)))
                 .map { a in
-                    return try castOptionalOrThrow(NSError.self, a[1])
+                    return try castOptionalOrThrow(NSError.self, a[1] as AnyObject)
                 }
     }
 
@@ -81,7 +81,7 @@ public extension Reactive where Base: CLLocationManager {
     var didUpdateHeading: RxObservable<CLHeading> {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate.locationManager(_:didUpdateHeading:)))
                 .map { a in
-                    return try castOrThrow(CLHeading.self, a[1])
+                    return try castOrThrow(CLHeading.self, a[1] as AnyObject)
                 }
     }
 
@@ -93,7 +93,7 @@ public extension Reactive where Base: CLLocationManager {
     var didEnterRegion: RxObservable<CLRegion> {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate.locationManager(_:didEnterRegion:)))
                 .map { a in
-                    return try castOrThrow(CLRegion.self, a[1])
+                    return try castOrThrow(CLRegion.self, a[1] as AnyObject)
                 }
     }
 
@@ -103,7 +103,7 @@ public extension Reactive where Base: CLLocationManager {
     var didExitRegion: RxObservable<CLRegion> {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate.locationManager(_:didExitRegion:)))
                 .map { a in
-                    return try castOrThrow(CLRegion.self, a[1])
+                    return try castOrThrow(CLRegion.self, a[1] as AnyObject)
                 }
     }
 
@@ -115,9 +115,9 @@ public extension Reactive where Base: CLLocationManager {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                         .locationManager(_:didDetermineState:for:)))
                 .map { a in
-                    let stateNumber = try castOrThrow(NSNumber.self, a[1])
+                    let stateNumber = try castOrThrow(NSNumber.self, a[1] as AnyObject)
                     let state = CLRegionState(rawValue: stateNumber.intValue) ?? CLRegionState.unknown
-                    let region = try castOrThrow(CLRegion.self, a[2])
+                    let region = try castOrThrow(CLRegion.self, a[2] as AnyObject)
                     return (state: state, region: region)
                 }
     }
@@ -129,8 +129,8 @@ public extension Reactive where Base: CLLocationManager {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                         .locationManager(_:monitoringDidFailFor:withError:)))
                 .map { a in
-                    let region = try castOptionalOrThrow(CLRegion.self, a[1])
-                    let error = try castOrThrow(NSError.self, a[2])
+                    let region = try castOptionalOrThrow(CLRegion.self, a[1] as AnyObject)
+                    let error = try castOrThrow(NSError.self, a[2] as AnyObject)
                     return (region: region, error: error)
                 }
     }
@@ -142,7 +142,7 @@ public extension Reactive where Base: CLLocationManager {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                         .locationManager(_:didStartMonitoringFor:)))
                 .map { a in
-                    return try castOrThrow(CLRegion.self, a[1])
+                    return try castOrThrow(CLRegion.self, a[1] as AnyObject)
                 }
     }
 
@@ -156,8 +156,8 @@ public extension Reactive where Base: CLLocationManager {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                         .locationManager(_:didRange:satisfying:)))
                 .map { a in
-                    let beacons = try castOrThrow([CLBeacon].self, a[1])
-                    let region = try castOrThrow(CLBeaconRegion.self, a[2])
+                    let beacons = try castOrThrow([CLBeacon].self, a[1] as AnyObject)
+                    let region = try castOrThrow(CLBeaconRegion.self, a[2] as AnyObject)
                     return (beacons: beacons, region: region)
                 }
     }
@@ -170,8 +170,8 @@ public extension Reactive where Base: CLLocationManager {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                         .locationManager(_:didFailRangingFor:error:)))
                 .map { a in
-                    let region = try castOrThrow(CLBeaconRegion.self, a[1])
-                    let error = try castOrThrow(NSError.self, a[2])
+                    let region = try castOrThrow(CLBeaconRegion.self, a[1] as AnyObject)
+                    let error = try castOrThrow(NSError.self, a[2] as AnyObject)
                     return (region: region, error: error)
                 }
     }
@@ -185,7 +185,7 @@ public extension Reactive where Base: CLLocationManager {
     var didVisit: RxObservable<CLVisit> {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate.locationManager(_:didVisit:)))
                 .map { a in
-                    return try castOrThrow(CLVisit.self, a[1])
+                    return try castOrThrow(CLVisit.self, a[1] as AnyObject)
                 }
     }
 
@@ -199,7 +199,7 @@ public extension Reactive where Base: CLLocationManager {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                 .locationManagerDidChangeAuthorization(_:)))
                 .map { a in
-                    let manager = try castOrThrow(CLLocationManager.self, a[0])
+                    let manager = try castOrThrow(CLLocationManager.self, a[0] as AnyObject)
                     let status = manager.authorizationStatus
                     return status
                 }
