@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import RxSwift
-import RxCocoa
+
 
 public extension Reactive where Base: UICollectionView {
 

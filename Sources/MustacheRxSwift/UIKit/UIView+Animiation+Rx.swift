@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-import RxCocoa
+
 import RxSwift
 
 public extension Reactive where Base: UIView {

@@ -1,7 +1,7 @@
 
 import Foundation
 import RxSwift
-import RxCocoa
+
 import UIKit
 
 public extension Reactive where Base: UITableView {

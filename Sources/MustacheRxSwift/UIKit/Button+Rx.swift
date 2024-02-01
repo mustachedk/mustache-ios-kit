@@ -1,7 +1,7 @@
 
 import MustacheUIKit
 import RxSwift
-import RxCocoa
+
 
 public extension Reactive where Base: Button {
 

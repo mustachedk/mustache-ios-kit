@@ -5,7 +5,7 @@ import MustacheServices
 
 import RxSwift
 import RxSwiftExt
-import RxCocoa
+
 
 public protocol RxGeoLocationServiceType {
 

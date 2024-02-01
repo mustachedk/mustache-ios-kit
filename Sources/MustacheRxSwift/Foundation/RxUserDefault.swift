@@ -1,6 +1,6 @@
 import Foundation
 import RxSwift
-import RxCocoa
+
 
 @propertyWrapper
 open class RxUserDefault<Value: Codable> {
