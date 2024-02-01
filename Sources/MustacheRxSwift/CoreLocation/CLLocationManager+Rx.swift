@@ -209,7 +209,7 @@ public extension Reactive where Base: CLLocationManager {
 
 fileprivate func castOrThrow<T>(_ resultType: T.Type, _ object: Any) throws -> T {
     guard let returnValue = object as? T else {
-        throw RxCocoaError.castingError(object: object, targetType: resultType)
+        throw RxCLLocationManagerError.castingError(object: object, targetType: resultType)
     }
 
     return returnValue
@@ -221,8 +221,12 @@ fileprivate func castOptionalOrThrow<T>(_ resultType: T.Type, _ object: Any) thr
     }
 
     guard let returnValue = object as? T else {
-        throw RxCocoaError.castingError(object: object, targetType: resultType)
+        throw RxCLLocationManagerError.castingError(object: object, targetType: resultType)
     }
 
     return returnValue
+}
+
+public enum RxCLLocationManagerError: Swift.Error {
+    case castingError(object: Any, targetType: Any.Type)
 }
