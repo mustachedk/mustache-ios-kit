@@ -1,7 +1,6 @@
 
 import Foundation
 import UIKit
-import SnapKit
 
 open class UISwipeActivityIndicatorView: UIActivityIndicatorView {
 
@@ -43,10 +42,10 @@ extension UIView {
             activityIndicator.hidesWhenStopped = true
             activityIndicator.color = color
             superview.addSubviews(activityIndicator)
-            activityIndicator.snp.makeConstraints { (maker: ConstraintMaker) in
-                maker.left.equalTo(superview).inset(10)
-                maker.centerY.equalTo(superview)
-            }
+            
+            activityIndicator.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10).isActive = true
+            activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+            
             return activityIndicator
         } else {
             return nil

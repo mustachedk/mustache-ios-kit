@@ -1,3 +1,5 @@
+#if canImport(RxCocoa)
+
 import AVFoundation
 import RxSwift
 import RxCocoa
@@ -162,3 +164,5 @@ public extension Reactive where Base: AVCaptureMetadataOutput {
                 }
     }
 }
+
+#endif

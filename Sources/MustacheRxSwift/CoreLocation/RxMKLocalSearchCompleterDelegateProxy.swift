@@ -1,5 +1,9 @@
+#if canImport(CoreLocation)
+
 import CoreLocation
 import MapKit
+
+#if canImport(RxCocoa)
 
 import RxSwift
 import RxCocoa
@@ -33,3 +37,7 @@ public class RxMKLocalSearchCompleterDelegateProxy: DelegateProxy<MKLocalSearchC
     }
 
 }
+
+#endif
+
+#endif

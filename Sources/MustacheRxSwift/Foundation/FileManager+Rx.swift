@@ -1,6 +1,10 @@
 
 import Foundation
+
+#if canImport(RxCocoa)
+
 import RxSwift
+import RxCocoa
 
 public extension FileManager {
 
@@ -12,3 +16,5 @@ public extension FileManager {
     }
 
 }
+
+#endif

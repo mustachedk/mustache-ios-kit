@@ -89,10 +89,8 @@ open class Button: UIButton {
 
         self.activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(self.activityIndicator)
-        self.activityIndicator.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
-        
+        self.activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        self.activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
     }
 
     // ----------------------------- Rounded -----------------------------//
