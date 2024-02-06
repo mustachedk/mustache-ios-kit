@@ -1,8 +1,10 @@
 
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 public extension UINavigationController {
     
     func pushViewControllerAsync(viewController: UIViewController, animated: Bool) async  {
@@ -52,3 +54,5 @@ public extension UINavigationController {
     }
     
 }
+
+#endif

@@ -1,3 +1,5 @@
+#if canImport(UIKit)
+
 import UIKit
 
 public extension UITableView {
@@ -170,3 +172,5 @@ public extension UITableView {
     }
 
 }
+
+#endif

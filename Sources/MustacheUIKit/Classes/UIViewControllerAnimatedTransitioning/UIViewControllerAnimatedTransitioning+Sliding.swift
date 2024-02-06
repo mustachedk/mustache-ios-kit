@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -52,3 +52,4 @@ public  class SlidingTransition: NSObject, UIViewControllerAnimatedTransitioning
         return vcs.firstIndex(where: { $0 == controller })
     }
 }
+#endif

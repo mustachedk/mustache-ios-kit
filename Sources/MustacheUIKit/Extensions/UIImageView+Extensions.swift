@@ -1,3 +1,5 @@
+#if canImport(UIKit)
+
 import UIKit
 
 // fixing Bug in XCode
@@ -39,3 +41,4 @@ extension UIImageView {
 
     }
 }
+#endif

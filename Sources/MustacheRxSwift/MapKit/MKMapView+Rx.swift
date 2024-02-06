@@ -122,6 +122,7 @@ public extension Reactive where Base: MKMapView {
                 }
     }
 
+    @available(macOS 11.0, *)
     var didChangeUserTrackingMode: ControlEvent<(mode: MKUserTrackingMode, animated: Bool)> {
         let source = delegate
                 .methodInvoked(#selector(MKMapViewDelegate.mapView(_:didChange:animated:)))
@@ -149,7 +150,7 @@ public extension Reactive where Base: MKMapView {
 //                }
 //        return ControlEvent(events: source)
 //    }
-
+    #if canImport(iOS)
     var annotationViewCalloutAccessoryControlTapped: ControlEvent<(view: MKAnnotationView, control: UIControl)> {
         let source = delegate
                 .methodInvoked(#selector(MKMapViewDelegate.mapView(_:annotationView:calloutAccessoryControlTapped:)))
@@ -159,6 +160,7 @@ public extension Reactive where Base: MKMapView {
                 }
         return ControlEvent(events: source)
     }
+    #endif
 
     // MARK: Selecting Annotation Views
 

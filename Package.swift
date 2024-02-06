@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "MustacheKit",
-    platforms: [.iOS(.v12), .macOS(.v10_14)],
+    platforms: [.iOS(.v13), .macOS(.v10_14)],
     products: [
         .library(
             name: "MustacheFoundation",

@@ -1,3 +1,5 @@
+#if canImport(UIKit)
+
 import UIKit
 import MustacheFoundation
 
@@ -120,3 +122,5 @@ public extension UIViewController {
     }
 
 }
+
+#endif

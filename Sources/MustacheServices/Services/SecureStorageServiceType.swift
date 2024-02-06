@@ -22,15 +22,15 @@ public protocol SecureStorageServiceType {
     
     func store(data: Data, with pin: String) throws
     
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 15, *)
     func enableBiometrics() async throws
     
     func store(data: Data) throws
     
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 15, *)
     func getData(with pin: String) async throws -> Data
     
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 15, *)
     func getData() async throws -> Data
     
     func clearData(from: UIDStorageMode)
@@ -62,7 +62,11 @@ public class SecureStorageService: SecureStorageServiceType {
     
     public var isFaceIdSupported: Bool {
         let context = LAContext()
-        return context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) && context.biometryType == .faceID
+        if #available(macOS 10.15, *) {
+            return context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) && context.biometryType == .faceID
+        } else {
+            return false
+        }
     }
     
     public var isTouchIdSupported: Bool {
@@ -157,7 +161,7 @@ public class SecureStorageService: SecureStorageServiceType {
         }
             
     }
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 15, *)
     public func enableBiometrics() async throws {
         
         let context = LAContext()
@@ -221,7 +225,7 @@ public class SecureStorageService: SecureStorageServiceType {
         
     }
     
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 15, *)
     public func getData() async throws -> Data {
         
         let context = LAContext()
@@ -341,7 +345,7 @@ public class SimulatorSecureStorageService: SecureStorageService {
         return self.storage[.pin] ?? Data()
     }
     
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 15, *)
     override public func getData() async throws -> Data {
         return self.storage[.biometric] ?? Data()
     }

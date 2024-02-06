@@ -59,6 +59,7 @@ public extension Reactive where Base: CLLocationManager {
     /**
     Reactive wrapper for `delegate` message.
     */
+    @available(macOS 10.15, *)
     var didPauseLocationUpdates: RxObservable<Void> {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                         .locationManagerDidPauseLocationUpdates(_:)))
@@ -70,6 +71,7 @@ public extension Reactive where Base: CLLocationManager {
     /**
     Reactive wrapper for `delegate` message.
     */
+    @available(macOS 10.15, *)
     var didResumeLocationUpdates: RxObservable<Void> {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                         .locationManagerDidResumeLocationUpdates(_:)))
@@ -83,6 +85,7 @@ public extension Reactive where Base: CLLocationManager {
     /**
     Reactive wrapper for `delegate` message.
     */
+    @available(macOS 10.15, *)
     var didUpdateHeading: RxObservable<CLHeading> {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate.locationManager(_:didUpdateHeading:)))
                 .map { a in
@@ -156,7 +159,7 @@ public extension Reactive where Base: CLLocationManager {
     /**
     Reactive wrapper for `delegate` message.
     */
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 15, *)
     var didRangeBeaconsInRegion: RxObservable<(beacons: [CLBeacon], region: CLBeaconRegion)> {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                         .locationManager(_:didRange:satisfying:)))
@@ -170,7 +173,7 @@ public extension Reactive where Base: CLLocationManager {
     /**
     Reactive wrapper for `delegate` message.
     */
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 15, *)
     var rangingBeaconsDidFailForRegionWithError: RxObservable<(region: CLBeaconRegion, error: NSError)> {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                         .locationManager(_:didFailRangingFor:error:)))
@@ -186,7 +189,7 @@ public extension Reactive where Base: CLLocationManager {
     /**
     Reactive wrapper for `delegate` message.
     */
-    @available(iOS 8.0, *)
+    @available(iOS 8.0, macOS 10.15, *)
     var didVisit: RxObservable<CLVisit> {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate.locationManager(_:didVisit:)))
                 .map { a in
@@ -199,7 +202,7 @@ public extension Reactive where Base: CLLocationManager {
     /**
     Reactive wrapper for `delegate` message.
     */
-    @available(iOS 14.0, *)
+    @available(iOS 14.0, macOS 15, *)
     var didChangeAuthorizationStatus: RxObservable<CLAuthorizationStatus> {
         return delegate.methodInvoked(#selector(CLLocationManagerDelegate
                 .locationManagerDidChangeAuthorization(_:)))

@@ -1,3 +1,5 @@
+#if canImport(UIKit)
+
 import UIKit
 
 public extension UINavigationController {
@@ -38,3 +40,5 @@ public extension UINavigationController {
         }
     }
 }
+
+#endif

@@ -1,4 +1,6 @@
 
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 
@@ -9,3 +11,5 @@ public extension UIStackView {
     }
 
 }
+
+#endif

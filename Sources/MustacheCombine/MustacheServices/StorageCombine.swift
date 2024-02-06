@@ -7,7 +7,7 @@ private var singletonMemoryContainer: [String: Any] = [:]
 private var sharedMemoryKeyContainer = NSHashTable<NSString>.weakObjects()
 private var sharedMemoryValueContainer = NSMapTable<NSString, AnyObject>.weakToStrongObjects()
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 @propertyWrapper
 public class StorageCombine<T: Codable>: NSObject {
     
@@ -204,7 +204,7 @@ public class StorageCombine<T: Codable>: NSObject {
 
 
 // MARK: StorageMode.userDefaults
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 extension StorageCombine {
     
     func getUserDefaults(defaults: UserDefaults) -> T? {
@@ -240,7 +240,7 @@ extension StorageCombine {
     
 }
 // MARK: StorageMode.keychain
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 extension StorageCombine {
     
     func getKeychain(accessibility: KeychainItemAccessibility) -> T? {
@@ -280,7 +280,7 @@ extension StorageCombine {
 }
 
 // MARK: StorageMode.memory
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 extension StorageCombine {
     
     func getMemory(scope: MemoryScope) -> T? {

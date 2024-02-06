@@ -1,4 +1,6 @@
 
+#if canImport(UIKit)
+
 import MustacheUIKit
 
 import RxSwift
@@ -23,3 +25,5 @@ public extension RxObservable {
         })
     }
 }
+
+#endif

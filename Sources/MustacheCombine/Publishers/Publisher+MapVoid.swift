@@ -3,7 +3,7 @@ import Foundation
 
 import Combine
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 public extension Publisher {
     /// Replace each upstream value with a constant.
     ///

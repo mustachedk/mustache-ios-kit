@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -53,3 +53,4 @@ extension UIView {
     }
 
 }
+#endif

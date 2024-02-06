@@ -1,9 +1,11 @@
 
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 import Combine
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 public extension UISwitch {
     
     func isOnPublisher() -> AnyPublisher<Bool, Never> {
@@ -13,3 +15,4 @@ public extension UISwitch {
             .eraseToAnyPublisher()
     }
 }
+#endif

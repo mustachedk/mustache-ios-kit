@@ -2,7 +2,7 @@
 import XCTest
 import MustacheCombine
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 final class StorageMemoryTest: XCTestCase {
     
     @StorageCombine("memorySingletonNone", mode: .memory(scope: .singleton), expiration: .none)

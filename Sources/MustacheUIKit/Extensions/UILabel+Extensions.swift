@@ -1,3 +1,5 @@
+#if canImport(UIKit)
+
 import UIKit
 
 public extension UILabel {
@@ -127,3 +129,4 @@ public extension UILabel {
 
     }
 }
+#endif

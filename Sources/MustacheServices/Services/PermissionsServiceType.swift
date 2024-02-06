@@ -7,7 +7,7 @@ import UserNotifications
 import MustacheFoundation
 import Combine
 
-@available(iOS 14.0, *)
+@available(iOS 14.0, macOS 10.15, *)
 public protocol PermissionsServiceType {
     
     var isLocationAllowed: Bool { get }
@@ -29,17 +29,24 @@ public protocol PermissionsServiceType {
     func bluetoothPermission() async throws -> Bool
 }
 
-@available(iOS 14.0, *)
+@available(iOS 14.0, macOS 15, *)
 public class PermissionsService: NSObject, PermissionsServiceType {
     
     private var locationAuthorizationStatus: CLAuthorizationStatus {
         return self.locationManager.authorizationStatus
     }
     
+#if os(iOS)
     public var isLocationAllowed: Bool {
         let authorizationStatus = self.locationAuthorizationStatus
         return (authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways) && CLLocationManager.locationServicesEnabled()
     }
+#elseif os(macOS)
+    public var isLocationAllowed: Bool {
+        let authorizationStatus = self.locationAuthorizationStatus
+        return authorizationStatus == .authorizedAlways && CLLocationManager.locationServicesEnabled()
+    }
+#endif
     
     private lazy var locationStatusSubject: CurrentValueSubject<CLAuthorizationStatus, Never> = {
         let initial = self.locationManager.authorizationStatus
@@ -119,7 +126,7 @@ public class PermissionsService: NSObject, PermissionsServiceType {
     }
 }
 
-@available(iOS 14.0, *)
+@available(iOS 14.0, macOS 15, *)
 extension PermissionsService: CLLocationManagerDelegate {
     
     @objc public func locationManagerTimeout() {
@@ -161,7 +168,7 @@ extension PermissionsService: CLLocationManagerDelegate {
     
 }
 
-@available(iOS 14.0, *)
+@available(iOS 14.0, macOS 15, *)
 extension PermissionsService: CBPeripheralManagerDelegate {
     
     @objc public func peripheralManagerTimeout() {

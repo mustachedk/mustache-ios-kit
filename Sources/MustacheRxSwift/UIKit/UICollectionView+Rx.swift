@@ -1,5 +1,7 @@
 
-import Foundation 
+#if canImport(UIKit)
+
+import Foundation
 import UIKit
 
 import RxSwift
@@ -14,3 +16,5 @@ public extension Reactive where Base: UICollectionView {
         }
     }
 }
+
+#endif

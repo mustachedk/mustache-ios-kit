@@ -109,6 +109,7 @@ import RxCocoa
 
 */
 
+@available(macOS 13.0, *)
 extension AVCaptureMetadataOutput: HasDelegate {
 
     public var delegate: AVCaptureMetadataOutputObjectsDelegate? {
@@ -124,6 +125,7 @@ extension AVCaptureMetadataOutput: HasDelegate {
 
 }
 
+@available(macOS 13.0, *)
 public class RxCaptureMetadataOutputObjectsDelegateProxy: DelegateProxy<AVCaptureMetadataOutput, AVCaptureMetadataOutputObjectsDelegate>, DelegateProxyType, AVCaptureMetadataOutputObjectsDelegate {
 
     /// Typed parent object.
@@ -150,6 +152,7 @@ public class RxCaptureMetadataOutputObjectsDelegateProxy: DelegateProxy<AVCaptur
 
 }
 
+@available(macOS 13.0, *)
 public extension Reactive where Base: AVCaptureMetadataOutput {
 
     var delegate: DelegateProxy<AVCaptureMetadataOutput, AVCaptureMetadataOutputObjectsDelegate> {

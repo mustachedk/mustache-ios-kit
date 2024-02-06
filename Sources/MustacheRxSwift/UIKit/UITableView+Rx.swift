@@ -1,4 +1,6 @@
 
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 
@@ -13,3 +15,5 @@ public extension Reactive where Base: UITableView {
         }
     }
 }
+
+#endif

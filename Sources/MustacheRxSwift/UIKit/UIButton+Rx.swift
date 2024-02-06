@@ -1,4 +1,5 @@
 
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -22,5 +23,7 @@ public extension Reactive where Base: UIButton {
         return boolObservable
     }
 }
+
+#endif
 
 #endif

@@ -1,7 +1,7 @@
 import Foundation
 import MustacheFoundation
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 public protocol AsyncCredentialsServiceType: AnyActor {
     
     static var accessibility: KeychainItemAccessibility { get set }
@@ -20,7 +20,7 @@ public protocol AsyncCredentialsServiceType: AnyActor {
     
 }
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 public actor AsyncCredentialsService: AsyncCredentialsServiceType {
     
     public static var accessibility: KeychainItemAccessibility = .afterFirstUnlock

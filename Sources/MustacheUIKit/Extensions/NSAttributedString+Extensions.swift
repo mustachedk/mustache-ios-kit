@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import UIKit
 
 public extension NSAttributedString {
@@ -15,3 +15,4 @@ public extension NSAttributedString {
         return ceil(boundingBox.width)
     }
 }
+#endif

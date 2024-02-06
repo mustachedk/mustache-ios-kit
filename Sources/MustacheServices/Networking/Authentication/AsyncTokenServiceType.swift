@@ -3,7 +3,7 @@ import Foundation
 import MustacheFoundation
 import Resolver
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 public protocol AsyncTokenServiceType: Actor {
     
     init()
@@ -13,7 +13,7 @@ public protocol AsyncTokenServiceType: Actor {
     func refreshToken() async throws -> AuthToken
 }
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 public actor AsyncTokenService: AsyncTokenServiceType {
     
     @Injected

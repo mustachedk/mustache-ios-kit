@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -15,4 +15,4 @@ public extension CustomTransitioningDelegate {
     var isDismissedAnimated: Bool { true }
 }
 
-
+#endif

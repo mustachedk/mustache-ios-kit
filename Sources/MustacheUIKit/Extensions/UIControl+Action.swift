@@ -1,8 +1,10 @@
 
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 
-@available(iOS 14.0, *)
+@available(iOS 14.0, macOS 15, *)
 public extension UIControl {
     
     func add(event: UIControl.Event, action: @escaping (()->())) {
@@ -17,3 +19,4 @@ public extension UIControl {
     }
     
 }
+#endif

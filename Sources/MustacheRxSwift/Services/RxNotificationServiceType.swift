@@ -1,4 +1,6 @@
 
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 import UserNotifications
@@ -42,3 +44,5 @@ public final class RxNotificationService: RxNotificationServiceType {
     }
 
 }
+
+#endif

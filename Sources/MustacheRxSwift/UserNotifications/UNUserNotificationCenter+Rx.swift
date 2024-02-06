@@ -1,4 +1,6 @@
 
+#if canImport(UIKit)
+
 import Foundation
 import UserNotifications
 import UIKit
@@ -55,5 +57,7 @@ public extension Reactive where Base: UNUserNotificationCenter {
     }
 
 }
+
+#endif
 
 #endif

@@ -1,3 +1,5 @@
+#if canImport(UIKit)
+
 import UIKit
 
 public extension UICollectionViewCell {
@@ -23,3 +25,4 @@ public extension UICollectionViewCell {
         NSLayoutConstraint.activate([leftConstraint, rightConstraint, topConstraint, bottomConstraint])
     }
 }
+#endif

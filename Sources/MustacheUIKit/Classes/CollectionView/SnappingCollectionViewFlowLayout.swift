@@ -1,3 +1,5 @@
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 
@@ -27,3 +29,5 @@ public class SnappingCollectionViewFlowLayout: UICollectionViewFlowLayout {
         return CGPoint(x: newHorizontalOffset, y: proposedContentOffset.y)
     }
 }
+
+#endif

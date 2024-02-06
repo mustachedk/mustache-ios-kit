@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import Foundation
 import UIKit
 import MustacheFoundation
@@ -482,3 +483,4 @@ public class TicketView: UIView {
 extension UIRectEdge: Hashable {
     public func hash(into hasher: inout Hasher) { hasher.combine(self.rawValue) }
 }
+#endif

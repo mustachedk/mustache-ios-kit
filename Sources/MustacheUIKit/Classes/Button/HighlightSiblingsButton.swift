@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -24,3 +24,4 @@ public class HighlightSiblingsButton: UIButton {
     }
     
 }
+#endif

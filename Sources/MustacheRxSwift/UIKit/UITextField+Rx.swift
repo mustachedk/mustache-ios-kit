@@ -5,6 +5,8 @@
 //  Copyright © 2018 Krunoslav Zaher. All rights reserved.
 //
 
+#if canImport(UIKit)
+
 import UIKit
 
 #if canImport(RxCocoa)
@@ -91,6 +93,8 @@ open class RxTextFieldDelegateProxy: DelegateProxy<UITextField, UITextFieldDeleg
         return forwardToDelegate()?.textFieldShouldClear?(textField) ?? true
     }
 }
+
+#endif
 
 #endif
 

@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import UIKit
 
 public extension UIDevice {
@@ -15,3 +15,4 @@ public extension UIDevice {
     }
     
 }
+#endif

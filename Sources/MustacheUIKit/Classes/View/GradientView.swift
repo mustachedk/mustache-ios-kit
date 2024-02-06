@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import UIKit
 
 @IBDesignable
@@ -58,3 +59,4 @@ enum GradientViewType: UInt {
         }
     }
 }
+#endif

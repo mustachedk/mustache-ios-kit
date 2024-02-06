@@ -1,4 +1,7 @@
+#if canImport(UIKit)
+
 import UIKit
+
 //Xib
 public extension UIView {
 
@@ -199,3 +202,5 @@ public extension UIView {
         return false
     }
 }
+
+#endif

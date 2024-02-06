@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import UIKit
 
 public extension UITableViewCell {
@@ -6,3 +7,4 @@ public extension UITableViewCell {
     class var identifier: String { return String(describing: self) }
 
 }
+#endif

@@ -1,3 +1,5 @@
+#if canImport(UIKit)
+
 import UIKit
 
 public extension UIView {
@@ -259,3 +261,5 @@ public enum ElasticAnimationSubType {
     case zeroToOne
     case oneToZero
 }
+
+#endif

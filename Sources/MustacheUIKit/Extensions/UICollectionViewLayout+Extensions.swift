@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -13,3 +14,4 @@ public extension UICollectionViewLayout {
     }
     
 }
+#endif
