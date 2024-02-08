@@ -31,6 +31,8 @@ let package = Package(
         .target(
             name: "MustacheFoundation",
             dependencies: []),
+        .binaryTarget(name: "MustacheFoundationSDK",
+                      path: "Builds/MustacheFoundation.xcframework"),
         .target(
             name: "MustacheServices",
             dependencies: ["MustacheFoundation", "Resolver"]),
