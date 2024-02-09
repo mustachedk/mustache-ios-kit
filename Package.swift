@@ -11,6 +11,9 @@ let package = Package(
             name: "MustacheFoundation",
             targets: ["MustacheFoundation"]),
         .library(
+            name: "MustacheFoundationSDK",
+            targets: ["MustacheFoundationSDK"]),
+        .library(
             name: "MustacheServices",
             targets: ["MustacheServices"]),
         .library(
