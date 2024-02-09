@@ -22,6 +22,15 @@ let package = Package(
         .library(
             name: "MustacheCombine",
             targets: ["MustacheCombine"]),
+        .library(
+            name: "RxSwift",
+            targets: ["RxSwift"]),
+        .library(
+            name: "RxCocoa",
+            targets: ["RxCocoa"]),
+        .library(
+            name: "RxRelay",
+            targets: ["RxRelay"]),
     ],
     dependencies: [
         .package(url: "https://github.com/hmlongco/Resolver.git", exact: "1.5.0"),
