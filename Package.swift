@@ -11,9 +11,6 @@ let package = Package(
             name: "MustacheFoundation",
             targets: ["MustacheFoundation"]),
         .library(
-            name: "MustacheFoundationSDK",
-            targets: ["MustacheFoundationSDK"]),
-        .library(
             name: "MustacheServices",
             targets: ["MustacheServices"]),
         .library(
@@ -28,14 +25,11 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/hmlongco/Resolver.git", exact: "1.5.0"),
-        .package(url: "https://github.com/ReactiveX/RxSwift.git", exact: "6.6.0"),
     ],
     targets: [
         .target(
             name: "MustacheFoundation",
             dependencies: []),
-        .binaryTarget(name: "MustacheFoundationSDK",
-                      path: "Builds/MustacheFoundation.xcframework"),
         .target(
             name: "MustacheServices",
             dependencies: ["MustacheFoundation", "Resolver"]),
@@ -44,12 +38,28 @@ let package = Package(
             dependencies: ["MustacheFoundation"]),
         .target(
             name: "MustacheRxSwift",
-            dependencies: ["RxSwift", .product(name: "RxCocoa", package: "RxSwift"), "MustacheServices", "MustacheUIKit"]),
+            dependencies: [
+                .target(name: "RxSwift"),
+                .target(name: "RxCocoa"),
+                .target(name: "RxRelay"),
+                .target(name: "MustacheServices"),
+                .target(name: "MustacheUIKit"),
+            ]),
         .target(
             name: "MustacheCombine",
             dependencies: ["MustacheFoundation"]),
         .testTarget(
             name: "MustacheCombineTest",
             dependencies: ["MustacheCombine"]),
+        .binaryTarget(
+            name: "RxSwift",
+            path: "RxSwift.xcframework"),
+        .binaryTarget(
+            name: "RxCocoa",
+            path: "RxCocoa.xcframework"),
+        .binaryTarget(
+            name: "RxRelay",
+            path: "RxRelay.xcframework"),
     ]
 )
+//https://github.com/ReactiveX/RxSwift/releases/download/6.6.0/RxSwift.xcframework.zip
