@@ -52,7 +52,7 @@ let package = Package(
                 .target(name: "RxCocoa"),
                 .target(name: "RxRelay"),
                 .target(name: "MustacheServices"),
-                .target(name: "MustacheUIKit"),
+                .target(name: "MustacheUIKit")
             ]),
         .target(
             name: "MustacheCombine",
