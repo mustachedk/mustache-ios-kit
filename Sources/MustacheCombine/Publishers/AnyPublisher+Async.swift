@@ -3,11 +3,11 @@ import Combine
 
 // Credits https://medium.com/geekculture/from-combine-to-async-await-c08bf1d15b77
 
-enum AsyncError: Error {
+public enum AsyncError: Error {
     case finishedWithoutValue
 }
 
-extension AnyPublisher {
+public extension AnyPublisher {
     
     
     /// Converts a publisher to a async function the returns all the values in a list after the publisher completes.
@@ -44,7 +44,7 @@ extension AnyPublisher {
 
 
 
-extension AnyPublisher {
+public extension AnyPublisher {
     
     /// Converts a publisher to a async function the returns the first value from the publisher.
     /// /// - Returns: The first element from the publisher

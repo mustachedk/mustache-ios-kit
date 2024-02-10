@@ -4,7 +4,7 @@
 import Foundation
 import Combine
 
-extension Publisher {
+public extension Publisher {
     
     
     /// A publisher that completes after the specified interval, or never if no interval is specified.

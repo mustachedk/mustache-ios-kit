@@ -3,9 +3,9 @@ import Foundation
 import Combine
 
 @available(iOS 14.0, *)
-extension Publisher {
+public extension Publisher {
     
-    public func tryAwaitMap<T>(_ transform: @escaping (Self.Output) async throws -> T) -> Publishers.FlatMap<Future<T, Error>, Self> {
+    func tryAwaitMap<T>(_ transform: @escaping (Self.Output) async throws -> T) -> Publishers.FlatMap<Future<T, Error>, Self> {
         flatMap { value in
             Future { promise in
                 Task {
@@ -21,7 +21,7 @@ extension Publisher {
         }
     }
     
-    public func tryAwaitMap<T>(_ transform: @escaping (Self.Output) async throws -> T) -> Publishers.FlatMap<Future<T, Error>, Publishers.SetFailureType<Self, Error>> {
+    func tryAwaitMap<T>(_ transform: @escaping (Self.Output) async throws -> T) -> Publishers.FlatMap<Future<T, Error>, Publishers.SetFailureType<Self, Error>> {
         flatMap { value in
             Future { promise in
                 Task {
