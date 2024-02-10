@@ -2,6 +2,7 @@
 import Foundation
 import Combine
 
+@available(iOS 14.0, *)
 extension Publisher {
     
     public func tryAwaitMap<T>(_ transform: @escaping (Self.Output) async throws -> T) -> Publishers.FlatMap<Future<T, Error>, Self> {
