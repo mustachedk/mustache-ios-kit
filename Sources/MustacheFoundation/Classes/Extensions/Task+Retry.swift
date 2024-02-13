@@ -3,6 +3,7 @@ import Foundation
 
 // Credits https://www.swiftbysundell.com/articles/retrying-an-async-swift-task/
 
+@available(macOS 10.15, *)
 public extension Task where Failure == Error {
     
     @discardableResult

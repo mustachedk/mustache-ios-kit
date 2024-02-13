@@ -4,6 +4,7 @@
 import Foundation
 import Combine
 
+@available(macOS 10.15, *)
 public extension Publisher {
     
     

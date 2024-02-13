@@ -3,6 +3,7 @@ import Foundation
 import Combine
 
 // Credits: https://stackoverflow.com/a/73736693/1366083
+@available(macOS 10.15, *)
 public extension AnyPublisher {
     
     static func create<O, F>(_ subscribe: @escaping (AnySubscriber<O, F>) -> AnyCancellable) -> AnyPublisher<O, F> {

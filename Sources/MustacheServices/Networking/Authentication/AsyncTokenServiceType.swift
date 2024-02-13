@@ -1,7 +1,6 @@
 
 import Foundation
 import MustacheFoundation
-import Resolver
 
 @available(iOS 13.0, macOS 15, *)
 public protocol AsyncTokenServiceType: Actor {

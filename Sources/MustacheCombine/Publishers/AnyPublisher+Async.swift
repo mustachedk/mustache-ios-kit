@@ -7,6 +7,7 @@ public enum AsyncError: Error {
     case finishedWithoutValue
 }
 
+@available(macOS 10.15, *)
 public extension AnyPublisher {
     
     
@@ -44,6 +45,7 @@ public extension AnyPublisher {
 
 
 
+@available(macOS 10.15, *)
 public extension AnyPublisher {
     
     /// Converts a publisher to a async function the returns the first value from the publisher.

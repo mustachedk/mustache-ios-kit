@@ -32,16 +32,14 @@ let package = Package(
             name: "RxRelay",
             targets: ["RxRelay"]),
     ],
-    dependencies: [
-        .package(url: "https://github.com/hmlongco/Resolver.git", exact: "1.5.0"),
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "MustacheFoundation",
             dependencies: []),
         .target(
             name: "MustacheServices",
-            dependencies: ["MustacheFoundation", "Resolver"]),
+            dependencies: ["MustacheFoundation"]),
         .target(
             name: "MustacheUIKit",
             dependencies: ["MustacheFoundation"]),
