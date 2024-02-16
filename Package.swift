@@ -43,7 +43,10 @@ let package = Package(
         .target(
             name: "MustacheUIKit",
             dependencies: ["MustacheFoundation"],
-            resources: [.process("Resources")]
+            resources: [
+                .copy("Resources/README.md"),
+                .process("Resources/Assets.xcassets"),
+            ]
         ),
         .target(
             name: "MustacheRxSwift",
