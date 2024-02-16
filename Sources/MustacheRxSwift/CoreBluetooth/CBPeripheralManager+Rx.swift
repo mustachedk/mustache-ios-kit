@@ -2,60 +2,23 @@
 #if canImport(CoreBluetooth)
 import CoreBluetooth
 
-#if canImport(RxCocoa)
+#if canImport(RxSwift)
 import RxSwift
-import RxCocoa
 
-// swiftlint:disable identifier_name
-public extension Reactive where Base: CBPeripheralManager {
+class RxCBPeripheralManagerDelegate: NSObject, CBPeripheralManagerDelegate {
     
-    var delegate: CBPeripheralManagerDelegateProxy {
-        return CBPeripheralManagerDelegateProxy.proxy(for: base)
+    /// Typed parent object.
+    weak fileprivate(set) var manager: CBPeripheralManager?
+    
+    /// - parameter manager: Parent object for delegate proxy.
+    init(manager: CBPeripheralManager) {
+        super.init()
+        self.manager = manager
+        self.manager?.delegate = self
     }
     
-    var state: RxObservable<CBManagerState> { return self.delegate.didUpdateState }
-    
-    var didUpdateState: RxObservable<Void> { return delegate.didUpdateState.map { _ in } }
-    
-    // optional methods are setup using the `methodInvoked` function on the delegate
-    var willRestoreState: RxObservable<[String: Any]> {
-        return delegate.methodInvoked(#selector(CBPeripheralManagerDelegate.peripheralManager(_:willRestoreState:)))
-            .map { $0[1] as! [String: Any] }
-    }
-    
-    var didStartAdvertising: RxObservable<Error?> {
-        return delegate.methodInvoked(#selector(CBPeripheralManagerDelegate.peripheralManagerDidStartAdvertising(_:error:)))
-            .map { $0[1] as? Error }
-    }
-    
-}
-
-// The HasDelegate protocol is an associated type for the DelegateProxyType
-extension CBPeripheralManager: HasDelegate {
-    public typealias Delegate = CBPeripheralManagerDelegate
-}
-
-public class CBPeripheralManagerDelegateProxy: DelegateProxy<CBPeripheralManager, CBPeripheralManagerDelegate>, DelegateProxyType, CBPeripheralManagerDelegate {
-    
-    fileprivate let didUpdateState = PublishSubject<CBManagerState>()
-    
-    init(parentObject: CBPeripheralManager) {
-        super.init(parentObject: parentObject, delegateProxy: CBPeripheralManagerDelegateProxy.self)
-    }
-    
-    public static func registerKnownImplementations() {
-        register { CBPeripheralManagerDelegateProxy(parentObject: $0) }
-    }
-    
-    public static func currentDelegate(for object: CBPeripheralManager) -> CBPeripheralManagerDelegate? {
-        return object.delegate
-    }
-    
-    public static func setCurrentDelegate(_ delegate: CBPeripheralManagerDelegate?, to object: CBPeripheralManager) {
-        object.delegate = delegate
-    }
-    
-    public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+    fileprivate let didUpdateState = ReplaySubject<CBManagerState>.create(bufferSize: 1)
+    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         self.didUpdateState.onNext(peripheral.state)
     }
     
@@ -63,6 +26,17 @@ public class CBPeripheralManagerDelegateProxy: DelegateProxy<CBPeripheralManager
         self.didUpdateState.onCompleted()
     }
     
+}
+
+// swiftlint:disable identifier_name
+public extension Reactive where Base: CBPeripheralManager {
+    
+    internal var delegate: RxCBPeripheralManagerDelegate {
+        return RxCBPeripheralManagerDelegate(manager: base)
+    }
+    
+    var didUpdateState: RxObservable<CBManagerState> { return self.delegate.didUpdateState }
+        
 }
 
 #endif
