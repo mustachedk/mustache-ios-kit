@@ -11,9 +11,9 @@ extension Foundation.Bundle {
         
         /* The name of your local package, prepended by "LocalPackages_" for iOS and "PackageName_" for macOS. You may have same PackageName and TargetName*/
         
-        let bundleNameIOS = "LocalPackages_MustacheUIKit"
+        let bundleNameIOS = "MustacheKit_MustacheUIKit"
         
-        let bundleNameMacOs = "PackageName_MustacheUIKit"
+        let bundleNameMacOs = "MustacheKit_MustacheUIKit"
         
         let candidates = [
             /* Bundle should be present here when the package is linked into an App. */
