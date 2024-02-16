@@ -2,7 +2,7 @@
 import Foundation
 import UIKit
 
-extension UIView {
+public extension UIView {
     
     func constraint(to view: UIView, constant: CGFloat) {
         
