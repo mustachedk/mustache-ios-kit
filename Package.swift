@@ -42,7 +42,9 @@ let package = Package(
             dependencies: ["MustacheFoundation"]),
         .target(
             name: "MustacheUIKit",
-            dependencies: ["MustacheFoundation"]),
+            dependencies: ["MustacheFoundation"],
+            resources: [.process("Resources")]
+        ),
         .target(
             name: "MustacheRxSwift",
             dependencies: [
