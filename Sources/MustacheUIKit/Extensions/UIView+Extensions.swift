@@ -207,7 +207,7 @@ public extension UIView {
 fileprivate final class BundleToken {
     static let bundle: Bundle = {
 #if SWIFT_PACKAGE
-        return Bundle.module
+        return Bundle.myModule
 #else
         return Bundle(for: BundleToken.self)
 #endif
