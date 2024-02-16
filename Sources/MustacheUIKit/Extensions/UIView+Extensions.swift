@@ -43,8 +43,7 @@ public extension UIView {
     */
     func loadViewFromNib() -> UIView? {
         let nibName = type(of: self).nibName
-        let bundle = Bundle(for: type(of: self))
-        let nib = UINib(nibName: nibName, bundle: bundle)
+        let nib = UINib(nibName: nibName, bundle: BundleToken.bundle)
         let objects = nib.instantiate(withOwner: self, options: nil)
         let view = objects.first as? UIView
         return view
@@ -204,3 +203,13 @@ public extension UIView {
 }
 
 #endif
+
+fileprivate final class BundleToken {
+    static let bundle: Bundle = {
+#if SWIFT_PACKAGE
+        return Bundle.module
+#else
+        return Bundle(for: BundleToken.self)
+#endif
+    }()
+}
