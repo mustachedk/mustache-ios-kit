@@ -21,18 +21,11 @@ let package = Package(
             targets: ["MustacheRxSwift"]),
         .library(
             name: "MustacheCombine",
-            targets: ["MustacheCombine"]),
-        .library(
-            name: "RxSwift",
-            targets: ["RxSwift"]),
-        .library(
-            name: "RxCocoa",
-            targets: ["RxCocoa"]),
-        .library(
-            name: "RxRelay",
-            targets: ["RxRelay"]),
+            targets: ["MustacheCombine"])
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", "6.6.0"..."6.6.0")
+    ],
     targets: [
         .target(
             name: "MustacheFoundation",
@@ -51,9 +44,9 @@ let package = Package(
         .target(
             name: "MustacheRxSwift",
             dependencies: [
-                .target(name: "RxSwift"),
-                .target(name: "RxCocoa"),
-                .target(name: "RxRelay"),
+                "RxSwift",
+                .product(name: "RxRelay", package: "RxSwift"),
+                .product(name: "RxCocoa", package: "RxSwift"),
                 .target(name: "MustacheServices"),
                 .target(name: "MustacheUIKit")
             ]),
@@ -63,15 +56,6 @@ let package = Package(
         .testTarget(
             name: "MustacheCombineTest",
             dependencies: ["MustacheCombine"]),
-        .binaryTarget(
-            name: "RxSwift",
-            path: "RxSwift.xcframework"),
-        .binaryTarget(
-            name: "RxCocoa",
-            path: "RxCocoa.xcframework"),
-        .binaryTarget(
-            name: "RxRelay",
-            path: "RxRelay.xcframework"),
     ]
 )
 //https://github.com/ReactiveX/RxSwift/releases/download/6.6.0/RxSwift.xcframework.zip
