@@ -104,7 +104,8 @@ public extension UITableView {
 
     */
     func register<T: UITableViewCell>(nib: T.Type) {
-        let uiNib = UINib(nibName: nib.nibName, bundle: nil)
+        let bundle = Bundle(for: T.self)
+        let uiNib = UINib(nibName: nib.nibName, bundle: bundle)
         self.register(uiNib, forCellReuseIdentifier: nib.nibName)
     }
 
@@ -116,7 +117,8 @@ public extension UITableView {
 
     */
     func register<T: UITableViewHeaderFooterView>(headerFooterNib: T.Type) {
-        let uiNib = UINib(nibName: headerFooterNib.nibName, bundle: nil)
+        let bundle = Bundle(for: T.self)
+        let uiNib = UINib(nibName: headerFooterNib.nibName, bundle: bundle)
         self.register(uiNib, forHeaderFooterViewReuseIdentifier: headerFooterNib.nibName)
     }
 
