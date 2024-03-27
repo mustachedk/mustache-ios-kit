@@ -8,8 +8,8 @@ public extension UICollectionViewLayout {
         self.register(decorationView, forDecorationViewOfKind: decorationView.reuseIdentifier)
     }
     
-    func register<T: UICollectionReusableView>(decorationNib: T.Type) {
-        let uiNib = UINib(nibName: decorationNib.nibName, bundle: nil)
+    func register<T: UICollectionReusableView>(decorationNib: T.Type, bundle: Bundle? = Bundle(for: T.self)) {
+        let uiNib = UINib(nibName: decorationNib.nibName, bundle: bundle)
         self.register(uiNib, forDecorationViewOfKind: decorationNib.reuseIdentifier)
     }
     
