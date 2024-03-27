@@ -63,8 +63,7 @@ public extension UICollectionView {
         - nib: T.Type
 
     */
-    func register<T: UICollectionViewCell>(nib: T.Type) {
-        let bundle = Bundle(for: T.self)
+    func register<T: UICollectionViewCell>(nib: T.Type, bundle: Bundle? = Bundle(for: T.self)) {
         let uiNib = UINib(nibName: nib.nibName, bundle: bundle)
         self.register(uiNib, forCellWithReuseIdentifier: nib.identifier)
     }
@@ -76,8 +75,7 @@ public extension UICollectionView {
         - supplementaryNib: T.Type
         - nib: SupplementaryViewType
     */
-    func register<T: UICollectionReusableView>(supplementaryNib: T.Type, type: SupplementaryViewType) {
-        let bundle = Bundle(for: T.self)
+    func register<T: UICollectionReusableView>(supplementaryNib: T.Type, type: SupplementaryViewType, bundle: Bundle? = Bundle(for: T.self)) {
         let uiNib = UINib(nibName: supplementaryNib.nibName, bundle: bundle)
         self.register(uiNib, forSupplementaryViewOfKind: type.kind, withReuseIdentifier: supplementaryNib.nibName)
     }
