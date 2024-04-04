@@ -1,9 +1,8 @@
 
-#if canImport(Kingfisher)
-
 import Foundation
-import Kingfisher
 import UIKit
+
+import Kingfisher
 
 /// A ImageProcessor that cuts of the surrounding alpha of an UIImage
 public struct CropAlphaProcessor: ImageProcessor {
@@ -90,5 +89,3 @@ public extension UIImage {
         return context
     }
 }
-
-#endif

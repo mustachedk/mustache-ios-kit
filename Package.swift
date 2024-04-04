@@ -24,7 +24,8 @@ let package = Package(
             targets: ["MustacheCombine"])
     ],
     dependencies: [
-        .package(url: "https://github.com/ReactiveX/RxSwift.git", "6.6.0"..."6.6.0")
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", "6.6.0"..."6.6.0"),
+        .package(url: "https://github.com/onevcat/Kingfisher.git", "7.11.0"..."7.11.0")
     ],
     targets: [
         .target(
@@ -35,7 +36,10 @@ let package = Package(
             dependencies: ["MustacheFoundation"]),
         .target(
             name: "MustacheUIKit",
-            dependencies: ["MustacheFoundation"],
+            dependencies: [
+                "MustacheFoundation", 
+                "Kingfisher"
+            ],
             resources: [
                 .copy("Resources/README.md"),
                 .process("Resources/Assets.xcassets"),
