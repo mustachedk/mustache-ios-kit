@@ -1,9 +1,9 @@
 
 #if canImport(UIKit)
 
+import Combine
 import Foundation
 import UIKit
-import Combine
 
 @available(iOS 13.0, macOS 15, *)
 public extension UISwitch {
