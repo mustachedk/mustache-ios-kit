@@ -7,6 +7,33 @@ private var singletonMemoryContainer: [String: Any] = [:]
 private var sharedMemoryKeyContainer = NSHashTable<NSString>.weakObjects()
 private var sharedMemoryValueContainer = NSMapTable<NSString, AnyObject>.weakToStrongObjects()
 
+
+@available(iOS 13.0, macOS 10.15, *)
+@propertyWrapper
+public class StorageCombineDefault<T: Codable>: NSObject {
+    
+    public var wrappedValue: T {
+        get {
+            return self.storage.wrappedValue ?? self.defaultValue
+        }
+        set {
+            self.storage.wrappedValue = newValue
+        }
+    }
+    
+    public var projectedValue: AnyPublisher<T, Never> {
+        return self.storage.projectedValue.map { $0 ?? self.defaultValue }.eraseToAnyPublisher()
+    }
+    
+    private var defaultValue: T
+    private var storage: StorageCombine<T>
+    
+    public init(_ key: String, mode: StorageMode, defaultValue: T, expiration: ExpirationType = .none) {
+        self.storage = StorageCombine(key, mode: mode, defaultValue: defaultValue, expiration: expiration)
+        self.defaultValue = defaultValue
+    }
+}
+
 @available(iOS 13.0, macOS 10.15, *)
 @propertyWrapper
 public class StorageCombine<T: Codable>: NSObject {
