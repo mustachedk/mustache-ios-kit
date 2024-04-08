@@ -3,6 +3,7 @@
 import Foundation
 import UIKit
 
+#if canImport(Kingfisher)
 import Kingfisher
 
 /// A ImageProcessor that applies a gradient color to and image
@@ -31,6 +32,8 @@ public struct GradientProcessor: ImageProcessor {
         }
     }
 }
+
+#endif
 
 public extension UIImage {
     
