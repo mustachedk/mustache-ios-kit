@@ -37,8 +37,8 @@ let package = Package(
         .target(
             name: "MustacheUIKit",
             dependencies: [
-                "MustacheFoundation", 
-                "Kingfisher"
+                "MustacheFoundation",
+                .product(name: "Kingfisher", package: "Kingfisher")                
             ],
             resources: [
                 .copy("Resources/README.md"),
