@@ -64,7 +64,7 @@ public class StorageCombine<T: Codable>: NSObject {
     
     // MARK: Configuraation
     
-    private let configured: Bool = false
+    private var configured: Bool = false
     
     // MARK: Configuraation
     
@@ -129,10 +129,13 @@ public class StorageCombine<T: Codable>: NSObject {
         if let defaultValue, self.wrappedValue == nil {
             // Sets the initial default value and sends an event downstream if no other value is previuosly stored
             self.wrappedValue = defaultValue
+            self.configured = true
         } else if let wrappedValue = self.wrappedValue {
             // Sends an event if the initial value is present
+            self.configured = true
             self.wrappedValue = wrappedValue
         } else {
+            self.configured = true
             // Sends an event with an empty value
             self.wrappedValue = nil
         }
