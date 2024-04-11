@@ -64,6 +64,10 @@ public class StorageCombine<T: Codable>: NSObject {
     
     // MARK: Configuraation
     
+    private let configured: Bool = false
+    
+    // MARK: Configuraation
+    
     private let key: String
     private let mode: StorageMode
     private let expiration: ExpirationType
@@ -259,6 +263,9 @@ extension StorageCombine {
             defaults.removeObject(forKey: self.key)
         }
         
+        // Avoid sending inital value two times
+        if !self.configured { return }
+        
         // Sends notification so that subscribers of CurrentValueSubject gets the newest object
         NotificationCenter.default.post(name: notificationName(key: self.key),
                                         object: nil,
@@ -297,6 +304,9 @@ extension StorageCombine {
         } else {
             KeychainWrapper.standard.removeObject(forKey: self.key, withAccessibility: accessibility)
         }
+        
+        // Avoid sending inital value two times
+        if !self.configured { return }
         
         // Sends notification so that subscribers of CurrentValueSubject gets the newest object
         NotificationCenter.default.post(name: notificationName(key: self.key),
@@ -341,6 +351,9 @@ extension StorageCombine {
                 let cache = CacheContainer(value: value, createdAt: Date())
                 singletonMemoryContainer[self.key] = cache
                 
+                // Avoid sending inital value two times
+                if !self.configured { return }
+                
                 // Sends notification so that subscribers of CurrentValueSubject gets the newest object
                 NotificationCenter.default.post(name: notificationName(key: self.key),
                                                 object: nil,
@@ -355,6 +368,9 @@ extension StorageCombine {
                     self.uniqueMemoryStorage = nil
                 }
                 
+                // Avoid sending inital value two times
+                if !self.configured { return }
+                
                 // Sends notification so that subscribers of CurrentValueSubject gets the newest object
                 NotificationCenter.default.post(name: notificationName(key: self.key),
                                                 object: self,
@@ -368,6 +384,9 @@ extension StorageCombine {
                 } else {
                     sharedMemoryValueContainer.removeObject(forKey: self.sharedMemoryKey)
                 }
+                
+                // Avoid sending inital value two times
+                if !self.configured { return }
                 
                 // Sends notification so that subscribers of CurrentValueSubject gets the newest object
                 NotificationCenter.default.post(name: notificationName(key: self.key),
