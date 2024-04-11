@@ -116,7 +116,7 @@ public class StorageCombine<T: Codable>: NSObject {
         
         self.localeChangeObserver = NotificationCenter.default.addObserver(forName: notificationName(key: self.key),
                                                                            object: object,
-                                                                           queue: .main) { [unowned self] notification in
+                                                                           queue: nil) { [unowned self] notification in
             
             // Sets the value and sends an event downstream
             let value = notification.userInfo?[self.valueUserInfoKey] as? T
