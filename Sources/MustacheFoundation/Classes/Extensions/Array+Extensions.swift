@@ -29,6 +29,12 @@ public extension Array where Element: Equatable {
         return self
     }
     
+    @discardableResult
+    mutating func appending(_ element: Element) -> Self {
+        self.append(element)
+        return self
+    }
+    
     func uniques() -> Array {
         var seen = Array<Element>()
         for element in self {
