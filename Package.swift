@@ -56,7 +56,7 @@ let package = Package(
             ]),
         .target(
             name: "MustacheCombine",
-            dependencies: ["MustacheFoundation"]),
+            dependencies: ["MustacheFoundation", "MustacheServices"]),
         .testTarget(
             name: "MustacheCombineTest",
             dependencies: ["MustacheCombine"]),
