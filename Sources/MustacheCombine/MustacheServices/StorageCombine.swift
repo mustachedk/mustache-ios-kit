@@ -351,8 +351,12 @@ extension StorageCombine {
         switch scope {
             case .singleton:
                 
-                let cache = CacheContainer(value: value, createdAt: Date())
-                singletonMemoryContainer[self.key] = cache
+                if let value {
+                    let cache = CacheContainer(value: value, createdAt: Date())
+                    singletonMemoryContainer[self.key] = cache
+                } else {
+                    singletonMemoryContainer[self.key] = nil
+                }            
                 
                 // Avoid sending inital value two times
                 if !self.configured { return }
@@ -364,7 +368,7 @@ extension StorageCombine {
                 
             case .unique:
                 
-                if let value = value {
+                if let value {
                     let cache = CacheContainer(value: value, createdAt: Date())
                     self.uniqueMemoryStorage = cache
                 } else {
