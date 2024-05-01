@@ -12,15 +12,14 @@ public extension String {
         do {
             let detector = try NSDataDetector(types: types.rawValue)
             let matches = detector.matches(in: email, options: [], range: NSRange(location: 0, length: email.utf16.count))
+            guard matches.count == 1, let match = matches.first else { return false }
             
-            for match in matches {
-                if match.resultType == .link,
-                   let url = match.url,
-                   url.scheme == "mailto",
-                   match.range.length == email.utf16.count { // Ensures the entire string is a valid email
-                    return true
-                }
-            }
+            guard match.resultType == .link,
+                  let url = match.url,
+                  url.scheme == "mailto",
+                  match.range.length == email.utf16.count
+            else { return false }
+            
         } catch {
             print("Invalid detector.")
         }
