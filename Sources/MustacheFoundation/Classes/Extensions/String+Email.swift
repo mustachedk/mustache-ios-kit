@@ -23,7 +23,7 @@ public extension String {
         } catch {
             print("Invalid detector.")
         }
-        return false
+        return true
     }
     
 }
