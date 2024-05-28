@@ -8,6 +8,7 @@ public extension Collection {
         return indices.contains(index) ? self[index] : nil
     }
     
+    @available(*, deprecated, message: "Double negation, hard to read")
     var isNotEmpty: Bool {
         return !self.isEmpty
     }
