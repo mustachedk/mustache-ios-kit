@@ -20,7 +20,7 @@ public extension Optional where Wrapped == String {
     
 }
 
-extension Optional where Wrapped == String {
+public extension Optional where Wrapped == String {
     
     var isNilOrEmpty: Bool {
         switch self {
