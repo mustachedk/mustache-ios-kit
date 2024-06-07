@@ -2,7 +2,7 @@
 import Foundation
 import Combine
 
-extension Publisher {
+public extension Publisher {
     
     /// Provides a subject that shares a single subscription to the upstream publisher and
     /// replays at most `bufferSize` items emitted by that publisher
