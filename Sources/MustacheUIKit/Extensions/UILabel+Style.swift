@@ -4,7 +4,7 @@ import UIKit
 
 public extension UILabel {
     
-    func styleParagraph(lineHeightMultiple: CGFloat?, lineSpacing: CGFloat?, margin: CGFloat?, kern: CGFloat?) {
+    func styleParagraph(lineHeightMultiple: CGFloat? = nil, lineSpacing: CGFloat? = nil, margin: CGFloat? = nil, kern: CGFloat? = nil) {
         
         let newParagraphStyle = NSMutableParagraphStyle()
         newParagraphStyle.alignment = self.textAlignment
