@@ -30,6 +30,15 @@ public extension Array where Element: Equatable {
     }
     
     @discardableResult
+    mutating func replace(_ element: Element, with new: Element) -> Bool {
+        if let f = self.firstIndex(where: { $0 == element }) {
+            self[f] = new
+            return true
+        }
+        return false
+    }
+    
+    @discardableResult
     mutating func appending(_ element: Element) -> Self {
         self.append(element)
         return self
@@ -89,4 +98,10 @@ public extension Array where Element: Hashable {
         return Set(self)
     }
     
+}
+
+public extension Array {
+    init(count: Int, createElement: @autoclosure () -> Element) {
+        self = (0 ..< count).map { _ in createElement() }
+    }
 }
