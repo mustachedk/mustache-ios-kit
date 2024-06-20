@@ -1,6 +1,8 @@
 
 #if canImport(CoreBluetooth)
 import CoreBluetooth
+
+#if canImport(RxCocoa)
 import RxSwift
 import RxCocoa
 
@@ -62,4 +64,7 @@ public class CBPeripheralManagerDelegateProxy: DelegateProxy<CBPeripheralManager
     }
     
 }
+
+#endif
+
 #endif

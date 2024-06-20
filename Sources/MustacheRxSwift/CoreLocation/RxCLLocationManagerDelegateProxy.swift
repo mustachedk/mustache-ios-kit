@@ -1,4 +1,9 @@
+#if canImport(CoreLocation)
+
 import CoreLocation
+
+#if canImport(RxCocoa)
+
 import RxSwift
 import RxCocoa
 
@@ -31,3 +36,7 @@ public class RxCLLocationManagerDelegateProxy: DelegateProxy<CLLocationManager, 
     }
 
 }
+
+#endif
+
+#endif

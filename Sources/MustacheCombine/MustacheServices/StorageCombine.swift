@@ -2,7 +2,6 @@
 import Foundation
 import MustacheFoundation
 import Combine
-import Resolver
 
 private var singletonMemoryContainer: [String: Any] = [:]
 private var sharedMemoryKeyContainer = NSHashTable<NSString>.weakObjects()

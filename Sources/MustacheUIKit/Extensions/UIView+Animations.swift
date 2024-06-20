@@ -2,6 +2,7 @@ import UIKit
 
 public extension UIView {
 
+    #if os(iOS)
     /**
      Convenience method for shake feedback on a view, useful for when the user has entered incorrect data
 
@@ -24,7 +25,7 @@ public extension UIView {
                        animations: { self.transform = CGAffineTransform.identity },
                        completion: completion)
     }
-
+    #endif
 
     /**
      Convenience method for rotating a view using CGAffineTransform

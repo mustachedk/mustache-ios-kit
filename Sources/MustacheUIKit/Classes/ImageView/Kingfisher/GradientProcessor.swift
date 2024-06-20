@@ -1,6 +1,9 @@
 
+#if canImport(Kingfisher)
+
 import Foundation
 import UIKit
+
 import Kingfisher
 
 /// A ImageProcessor that applies a gradient color to and image
@@ -59,3 +62,5 @@ public extension UIImage {
         return image
     }
 }
+
+#endif
