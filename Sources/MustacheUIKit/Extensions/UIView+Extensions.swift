@@ -200,7 +200,7 @@ public extension UIView {
     }
 }
 
-enum LayoutAnchor {
+public enum LayoutAnchor {
     case top(to: NSLayoutYAxisAnchor, constant: CGFloat? = nil)
     case bottom(to: NSLayoutYAxisAnchor, constant: CGFloat? = nil)
     case leading(to: NSLayoutXAxisAnchor, constant: CGFloat? = nil)
@@ -217,7 +217,7 @@ enum LayoutAnchor {
     case centerInSuperview(rect: CGRect = .zero)
 }
 
-extension UIView {
+public extension UIView {
 
     func addSubview(_ subview: UIView, anchors: [LayoutAnchor]) {
         subview.translatesAutoresizingMaskIntoConstraints = false
