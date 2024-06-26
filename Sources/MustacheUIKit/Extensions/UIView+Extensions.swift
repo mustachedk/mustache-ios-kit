@@ -221,7 +221,7 @@ public extension UIView {
 
     func addSubview(_ subview: UIView, anchors: [LayoutAnchor]) {
         subview.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(subview)
+        self.addSubview(subview)
 
         anchors.forEach { anchor in
             switch anchor {
