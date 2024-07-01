@@ -1,7 +1,9 @@
 
+#if canImport(UIKit)
+
 import MustacheUIKit
+
 import RxSwift
-import RxCocoa
 
 public extension Reactive where Base: Button {
 
@@ -11,7 +13,6 @@ public extension Reactive where Base: Button {
             view.isBusy = busy
         }
     }
-
 }
 
 public extension RxObservable {
@@ -24,3 +25,5 @@ public extension RxObservable {
         })
     }
 }
+
+#endif

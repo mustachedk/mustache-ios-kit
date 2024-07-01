@@ -29,7 +29,7 @@ public extension Date {
     }
     
     static var nowSafe: Date {
-        if #available(iOS 15, *) {
+        if #available(iOS 15, macOS 12, *) {
             return self.now
         } else {
             return Date()
@@ -74,7 +74,7 @@ public extension Date {
     
 }
 
-//@available(iOS 13.0, *)
+//@available(iOS 13.0, macOS 15, *)
 //extension Date: Strideable {
 //
 //    public func advanced(by n: Int) -> Date {

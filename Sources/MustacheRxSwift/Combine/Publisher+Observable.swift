@@ -7,9 +7,10 @@
 //
 #if canImport(Combine)
 import Combine
+
 import RxSwift
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 public extension Publisher {
     /// Returns an RxObservable<Output> representing the underlying
     /// Publisher. Upon subscription, the Publisher's sink pushes
@@ -37,7 +38,7 @@ public extension Publisher {
     }
 }
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 public extension Publisher where Failure == Never {
     /// Returns an RxObservable<Output> representing the underlying
     /// Publisher. Upon subscription, the Publisher's sink pushes

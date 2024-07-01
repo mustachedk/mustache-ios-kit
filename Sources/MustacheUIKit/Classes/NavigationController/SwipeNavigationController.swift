@@ -1,4 +1,5 @@
 
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -120,3 +121,4 @@ extension SwipeNavigationController: UIGestureRecognizerDelegate {
         return self.viewControllers.count > 1 && self.duringPushAnimation == false
     }
 }
+#endif

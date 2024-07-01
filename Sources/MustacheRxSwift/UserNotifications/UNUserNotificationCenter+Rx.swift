@@ -1,7 +1,14 @@
+
+#if canImport(UIKit)
+
 import Foundation
 import UserNotifications
-import RxSwift
 import UIKit
+
+#if canImport(RxCocoa)
+
+import RxSwift
+import RxCocoa
 
 public extension Reactive where Base: UNUserNotificationCenter {
 
@@ -50,3 +57,7 @@ public extension Reactive where Base: UNUserNotificationCenter {
     }
 
 }
+
+#endif
+
+#endif

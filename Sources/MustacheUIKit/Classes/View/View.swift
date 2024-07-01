@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import UIKit
 
 @IBDesignable
@@ -107,3 +108,4 @@ open class MView: UIView {
         self.configureShadow()
     }
 }
+#endif

@@ -1,4 +1,5 @@
 
+#if os(iOS)
 import Foundation
 import AVFAudio
 
@@ -69,3 +70,4 @@ public class AudioSessionService: AudioSessionServiceType {
     }
     
 }
+#endif

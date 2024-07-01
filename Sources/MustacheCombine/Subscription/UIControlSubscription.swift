@@ -1,7 +1,10 @@
+
+#if canImport(UIKit)
+
 import UIKit
 import Combine
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 extension UIControl {
     
     class EventControlSubscription<EventSubscriber: Subscriber, Control: UIControl>: Subscription where EventSubscriber.Input == Control, EventSubscriber.Failure == Never {
@@ -37,6 +40,6 @@ extension UIControl {
         }
     }
 }
-
+#endif
 
 

@@ -4,7 +4,7 @@
 //:  Created by Andyy Hope on 18/08/2016.
 //:  Twitter: @andyyhope
 //:  Medium: Andyy Hope, https://medium.com/@AndyyHope
-
+#if canImport(UIKit)
 import UIKit
 
 public extension UIView {
@@ -110,3 +110,4 @@ public extension UIView {
 //     .animations { }
 //     .completion { _ in }
 //     .animate()
+#endif

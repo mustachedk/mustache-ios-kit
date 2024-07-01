@@ -1,8 +1,8 @@
 
 import Foundation
-import Resolver
 
-@available(iOS 13.0.0, *)
+
+@available(iOS 13.0, macOS 15, *)
 public protocol AsyncNetworkServiceType {
     
     init()
@@ -15,7 +15,7 @@ public protocol AsyncNetworkServiceType {
     
 }
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 public extension AsyncNetworkServiceType {
     
     func send<T: Decodable>(endpoint: Endpoint) async throws -> T {
@@ -30,7 +30,7 @@ public extension AsyncNetworkServiceType {
     
 }
 
-@available(iOS 13.0.0, *)
+@available(iOS 13.0, macOS 15, *)
 public actor AsyncNetworkService: AsyncNetworkServiceType {
     
     @LazyInjected

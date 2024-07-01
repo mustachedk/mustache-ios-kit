@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import UIKit
 
 open class ExpandingTextView: UITextView {
@@ -49,3 +50,4 @@ open class ExpandingTextView: UITextView {
     }
 
 }
+#endif

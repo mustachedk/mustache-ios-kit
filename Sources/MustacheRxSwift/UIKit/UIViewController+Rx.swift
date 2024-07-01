@@ -1,6 +1,9 @@
+
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
-import RxCocoa
+
 import RxSwift
 
 public extension Reactive where Base: UIViewController {
@@ -20,3 +23,5 @@ public extension Reactive where Base: UIViewController {
     }
 
 }
+
+#endif

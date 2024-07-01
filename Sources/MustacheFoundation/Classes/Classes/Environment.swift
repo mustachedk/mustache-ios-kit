@@ -36,6 +36,36 @@ public enum Configuration: String {
     case development, staging, production
 }
 
+extension Environment {
+    
+    private static let isTestFlight = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+    
+    // Assumes that the DEBUG flag is set
+    static var isDebug: Bool {
+#if DEBUG
+        return true
+#else
+        return false
+#endif
+    }
+    
+    public static var deployment: Deployment {
+        if self.isDebug {
+            return .debug
+        } else if isTestFlight {
+            return .testFlight
+        } else {
+            return .appStore
+        }
+    }
+}
+
+public enum Deployment {
+    case debug
+    case testFlight
+    case appStore
+}
+
 public func infoForKey(_ key: String) -> String? {
     return (Bundle.main.infoDictionary?[key] as? String)?
         .replacingOccurrences(of: "\\", with: "")

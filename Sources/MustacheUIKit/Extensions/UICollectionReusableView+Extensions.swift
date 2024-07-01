@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import UIKit
 
 public extension UICollectionReusableView {
@@ -10,3 +11,4 @@ public extension UICollectionReusableView {
     }
 
 }
+#endif

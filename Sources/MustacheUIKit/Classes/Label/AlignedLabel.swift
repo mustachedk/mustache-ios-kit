@@ -1,3 +1,5 @@
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 
@@ -46,4 +48,6 @@ public enum VerticalAlignment {
     case middle
     case bottom
 }
+
+#endif
 

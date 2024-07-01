@@ -1,8 +1,13 @@
+
+#if canImport(UIKit)
+
 import Foundation
-import UserNotifications
-import RxSwift
-import MustacheServices
 import UIKit
+import UserNotifications
+
+import MustacheServices
+
+import RxSwift
 
 public protocol RxNotificationServiceType {
 
@@ -39,3 +44,5 @@ public final class RxNotificationService: RxNotificationServiceType {
     }
 
 }
+
+#endif

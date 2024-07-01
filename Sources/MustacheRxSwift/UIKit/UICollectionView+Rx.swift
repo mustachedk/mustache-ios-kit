@@ -1,7 +1,11 @@
+
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
+
 import RxSwift
-import RxCocoa
+
 
 public extension Reactive where Base: UICollectionView {
 
@@ -12,3 +16,5 @@ public extension Reactive where Base: UICollectionView {
         }
     }
 }
+
+#endif

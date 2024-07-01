@@ -26,8 +26,11 @@ public extension MKMapView {
         if formFactor.isNaN {
             formFactor = 1
         }
-
+        #if canImport(UIKit)
         let maxDistance = distance * formFactor.double
+        #else
+        let maxDistance = distance * Double(formFactor)
+        #endif
 
         let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: maxDistance, longitudinalMeters: maxDistance)
         self.setRegion(region, animated: animated)

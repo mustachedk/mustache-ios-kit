@@ -1,8 +1,9 @@
 
 import Foundation
+
 import MustacheServices
+
 import RxSwift
-import Resolver
 
 public protocol RenewTokenServiceType {
 

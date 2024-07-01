@@ -1,3 +1,5 @@
+#if canImport(UIKit)
+
 import UIKit
 
 // fixing Bug in XCode
@@ -38,4 +40,6 @@ extension UIImageView {
       self.image = UIImage(cgImage: context.makeImage()!)
 
     }
+    
 }
+#endif

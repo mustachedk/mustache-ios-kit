@@ -1,3 +1,5 @@
+#if canImport(UIKit)
+
 import UIKit
 
 public extension UITextField {
@@ -40,3 +42,5 @@ public extension UITextField {
         self.resignFirstResponder()
     }
 }
+
+#endif

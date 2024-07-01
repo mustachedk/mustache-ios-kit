@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import UIKit
 
 public extension IndexPath {
@@ -21,3 +22,4 @@ public extension IndexPath {
     var even: Bool { return !odd }
 
 }
+#endif

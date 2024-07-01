@@ -1,4 +1,6 @@
 
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 #if canImport(AppTrackingTransparency)
@@ -17,5 +19,7 @@ public extension UIViewController {
         return true
     }
 }
+
+#endif
 
 #endif

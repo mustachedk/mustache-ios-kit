@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import UIKit
 
 open class HiddenTextField: UITextField {
@@ -51,3 +52,4 @@ open class HiddenTextField: UITextField {
     }
 
 }
+#endif

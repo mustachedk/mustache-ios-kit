@@ -1,0 +1,511 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.9.2 (swiftlang-5.9.2.2.56 clang-1500.1.0.2.5)
+// swift-module-flags: -target arm64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name MustacheFoundation
+import Foundation
+import Swift
+import UIKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+public struct Environment {
+  public static var config: MustacheFoundation.Configuration {
+    get
+  }
+  public static var clientId: Swift.String? {
+    get
+  }
+  public static var clientSecret: Swift.String? {
+    get
+  }
+  public static var isSimulator: Swift.Bool {
+    get
+  }
+}
+public enum Configuration : Swift.String {
+  case development, staging, production
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public func infoForKey(_ key: Swift.String) -> Swift.String?
+public func pListValue<T>(_ key: Swift.String, name: Swift.String) -> T?
+public enum Throwable<T> : Swift.Decodable where T : Swift.Decodable {
+  case success(T)
+  case failure(any Swift.Error)
+  public init(from decoder: any Swift.Decoder) throws
+}
+extension MustacheFoundation.Throwable {
+  public var value: T? {
+    get
+  }
+}
+extension Swift.Array where Element : Swift.Equatable {
+  public mutating func rearrange(fromIndex: Swift.Int, toIndex: Swift.Int)
+  public mutating func moveToFront(element: Element)
+  @discardableResult
+  public mutating func remove(element: Element) -> Swift.Int
+  @discardableResult
+  public mutating func remove(elements: [Element]) -> [Element]
+  public func uniques() -> Swift.Array<Element>
+  public static func + (lhs: Swift.Array<Element>, rhs: Swift.Array<Element>) -> Swift.Array<Element>
+  public static func - (lhs: Swift.Array<Element>, rhs: Swift.Array<Element>) -> Swift.Array<Element>
+}
+extension Swift.Array {
+  public var middle: Element? {
+    get
+  }
+  public func grouped<T>(by criteria: (Element) -> T) -> [T : [Element]] where T : Swift.Hashable
+}
+extension Swift.ArraySlice {
+  public var array: [Element] {
+    get
+  }
+}
+extension Swift.Array where Element : Swift.Hashable {
+  public var set: Swift.Set<Element> {
+    get
+  }
+}
+extension Swift.Bool {
+  public static func < (lhs: Swift.Bool, rhs: Swift.Bool) -> Swift.Bool
+  public static func > (lhs: Swift.Bool, rhs: Swift.Bool) -> Swift.Bool
+}
+extension Swift.Int {
+  public init(bool: Swift.Bool)
+}
+extension Foundation.Bundle {
+  public var releaseVersionNumber: Swift.String? {
+    get
+  }
+  public var buildVersionNumber: Swift.String? {
+    get
+  }
+  public func loadJson<T>(from file: Swift.String) -> [T] where T : Swift.Decodable
+}
+extension Foundation.Calendar {
+  public static var daDK: Foundation.Calendar {
+    get
+  }
+  public func startOfMonth(for date: Foundation.Date) -> Foundation.Date
+  public func endOfDay(for date: Foundation.Date) -> Foundation.Date
+  public func within(_ date: Foundation.Date, within component: Foundation.Calendar.Component, value: Swift.UInt) -> Swift.Bool
+}
+extension Foundation.CharacterSet {
+  public func contains(_ character: Swift.Character) -> Swift.Bool
+}
+extension Swift.ClosedRange {
+  public func clamp(_ value: Bound) -> Bound
+}
+extension Swift.Collection {
+  public subscript(safe index: Self.Index) -> Self.Element? {
+    get
+  }
+  public var isNotEmpty: Swift.Bool {
+    get
+  }
+}
+public func < <T>(left: T?, right: T) -> Swift.Bool where T : Swift.Comparable
+extension Swift.String {
+  public func date(_ format: Swift.String, utc: Swift.Bool = true) -> Foundation.Date?
+}
+extension Foundation.Date {
+  public var weekday: Swift.Int {
+    get
+  }
+  public var weekday2: Swift.Int {
+    get
+  }
+  public static var nowSafe: Foundation.Date {
+    get
+  }
+  public var dayNumberOfMonth: Swift.Int {
+    get
+  }
+  public var monthNumberOfYear: Swift.Int {
+    get
+  }
+  public func startOfMonth() -> Foundation.Date
+  public func endOfMonth() -> Foundation.Date
+  public var isInPast: Swift.Bool {
+    get
+  }
+  public var isInFuture: Swift.Bool {
+    get
+  }
+  public func format(_ format: Swift.String, utc: Swift.Bool = true) -> Swift.String
+  public func within(component: Foundation.Calendar.Component, value: Swift.UInt) -> Swift.Bool
+}
+extension Foundation.DateFormatter {
+  public func string(optional date: Foundation.Date?) -> Swift.String?
+}
+extension Swift.Dictionary {
+  public func stringRecursive(key: Key) -> Swift.String?
+  public func intRecursive(key: Key) -> Swift.Int?
+}
+public func == (lhs: any Swift.Error, rhs: any Swift.Error) -> Swift.Bool
+extension Swift.Equatable where Self : Swift.Error {
+  public static func == (lhs: Self, rhs: Self) -> Swift.Bool
+}
+extension Foundation.FileManager {
+  public func decodeObject<T>(forKey key: Swift.String) -> T? where T : Swift.Decodable
+  public func encode<T>(_ value: T?, forKey key: Swift.String) where T : Swift.Encodable
+  public func hasValue(forKey key: Swift.String) -> Swift.Bool
+  public func notificationName(key: Swift.String) -> Foundation.NSNotification.Name
+}
+public protocol InlineConfigurable {
+}
+extension MustacheFoundation.InlineConfigurable {
+  public func configured(_ configurator: (Self) -> Swift.Void) -> Self
+}
+extension ObjectiveC.NSObject : MustacheFoundation.InlineConfigurable {
+}
+extension Foundation.JSONDecoder : MustacheFoundation.InlineConfigurable {
+}
+extension Foundation.JSONEncoder : MustacheFoundation.InlineConfigurable {
+}
+extension Foundation.Locale {
+  public static let daDK: Foundation.Locale
+}
+extension ObjectiveC.NSObject {
+  public var className: Swift.String {
+    get
+  }
+  public class var className: Swift.String {
+    get
+  }
+  public func isNot<T>(_ type: T.Type) -> Swift.Bool
+}
+extension Foundation.NSRegularExpression {
+  convenience public init(_ pattern: Swift.String)
+  public func matches(_ string: Swift.String) -> Swift.Bool
+}
+extension Swift.String {
+  public static func ~= (lhs: Swift.String, rhs: Swift.String) -> Swift.Bool
+}
+extension Foundation.NumberFormatter {
+  public static let integers: Foundation.NumberFormatter
+  public static let decimals: Foundation.NumberFormatter
+  public static let price: Foundation.NumberFormatter
+  public func string(from double: Swift.Double) -> Swift.String?
+}
+extension Swift.Double {
+  public var int: Swift.Int {
+    get
+  }
+  public var cgfloat: CoreFoundation.CGFloat {
+    get
+  }
+  public var float: Swift.Float {
+    get
+  }
+  public var number: Foundation.NSNumber {
+    get
+  }
+  public func format(format: Swift.String) -> Swift.String
+  public func rounded(toPlaces places: Swift.Int) -> Swift.Double
+}
+extension Swift.Int {
+  public var odd: Swift.Bool {
+    get
+  }
+  public var even: Swift.Bool {
+    get
+  }
+  public var double: Swift.Double {
+    get
+  }
+  public var cgfloat: CoreFoundation.CGFloat {
+    get
+  }
+  public var float: Swift.Float {
+    get
+  }
+  public var uint: Swift.UInt {
+    get
+  }
+  public var number: Foundation.NSNumber {
+    get
+  }
+  public func format(format: Swift.String) -> Swift.String
+  public func roundUp(divisor: Swift.Int) -> Swift.Int
+  public var string: Swift.String {
+    get
+  }
+}
+extension Swift.UInt {
+  public var int: Swift.Int {
+    get
+  }
+  public var float: Swift.Float {
+    get
+  }
+  public var number: Foundation.NSNumber {
+    get
+  }
+  public var string: Swift.String {
+    get
+  }
+}
+extension Swift.Float {
+  public var double: Swift.Double {
+    get
+  }
+  public var cgfloat: CoreFoundation.CGFloat {
+    get
+  }
+  public var uint: Swift.UInt {
+    get
+  }
+  public var number: Foundation.NSNumber {
+    get
+  }
+  public var string: Swift.String {
+    get
+  }
+}
+extension Swift.String {
+  public var int: Swift.Int {
+    get
+  }
+  public var double: Swift.Double {
+    get
+  }
+  public var float: Swift.Float {
+    get
+  }
+  public var cgfloat: CoreFoundation.CGFloat {
+    get
+  }
+  public var uint: Swift.UInt {
+    get
+  }
+  public var number: Foundation.NSNumber {
+    get
+  }
+}
+infix operator &= : DefaultPrecedence
+public func &= (lhs: inout Swift.Bool, rhs: Swift.Bool)
+extension Swift.Optional {
+  public var exists: Swift.Bool {
+    get
+  }
+  public var isNil: Swift.Bool {
+    get
+  }
+}
+extension Swift.Sequence {
+  public func map<T>(_ keyPath: Swift.KeyPath<Self.Element, T>) -> [T]
+  public func sorted<T>(by keyPath: Swift.KeyPath<Self.Element, T>, ascending: Swift.Bool = true) -> [Self.Element] where T : Swift.Comparable
+}
+extension Swift.Substring {
+  public var intValue: Swift.Int? {
+    get
+  }
+  public var string: Swift.String {
+    get
+  }
+}
+extension Swift.String {
+  public func capitalizingFirstLetter() -> Swift.String
+  public mutating func capitalizeFirstLetter()
+  public func stripOutHtml() -> Swift.String?
+}
+extension Swift.String {
+  public var localized: Swift.String {
+    get
+  }
+  public var gif: Foundation.Data {
+    get
+  }
+  public var urlEscaped: Swift.String {
+    get
+  }
+  public var utf8Encoded: Foundation.Data {
+    get
+  }
+  public subscript(bounds: Swift.CountableClosedRange<Swift.Int>) -> Swift.String {
+    get
+  }
+  public subscript(bounds: Swift.CountableRange<Swift.Int>) -> Swift.String {
+    get
+  }
+  public subscript(bounds: Swift.PartialRangeUpTo<Swift.Int>) -> Swift.String {
+    get
+  }
+  public subscript(bounds: Swift.PartialRangeThrough<Swift.Int>) -> Swift.String {
+    get
+  }
+  public subscript(bounds: Swift.CountablePartialRangeFrom<Swift.Int>) -> Swift.String {
+    get
+  }
+}
+extension Swift.String {
+  public func separate(every stride: Swift.Int = 4, with separator: Swift.Character = " ") -> Swift.String
+  public var orNil: Swift.String? {
+    get
+  }
+}
+extension Swift.String {
+  public func decodingHTMLEntities() -> Swift.String
+}
+extension Swift.String {
+  public func defaultsLocalized(_ table: Swift.String, bundle: Foundation.Bundle, defaults: Foundation.UserDefaults = UserDefaults.standard, _ args: [any Swift.CVarArg]) -> Swift.String
+}
+extension Swift.Optional where Wrapped == Swift.String {
+  public var isEmpty: Swift.Bool {
+    get
+  }
+  public var orEmpty: Swift.String {
+    get
+  }
+}
+extension Swift.Double {
+  public static var minute: Swift.Double {
+    get
+  }
+  public static var hour: Swift.Double {
+    get
+  }
+  public static var day: Swift.Double {
+    get
+  }
+  public static var week: Swift.Double {
+    get
+  }
+}
+extension Foundation.TimeZone {
+  public static var daDK: Foundation.TimeZone {
+    get
+  }
+}
+extension Foundation.URL {
+  public var queryParameters: [Swift.String : Swift.String]? {
+    get
+  }
+}
+extension Foundation.UserDefaults {
+  public func decodeObject<T>(forKey key: Swift.String) -> T? where T : Swift.Decodable
+  public func encode<T>(_ value: T?, forKey key: Swift.String) where T : Swift.Encodable
+  public func hasValue(forKey key: Swift.String) -> Swift.Bool
+}
+@propertyWrapper open class FileSystem<Value> where Value : Swift.Decodable, Value : Swift.Encodable {
+  public init(_ key: Swift.String, defaultValue: Value)
+  open var wrappedValue: Value {
+    get
+    set
+  }
+  @objc deinit
+}
+@propertyWrapper open class FileSystemOptional<Value> where Value : Swift.Decodable, Value : Swift.Encodable {
+  public init(_ key: Swift.String)
+  open var wrappedValue: Value? {
+    get
+    set
+  }
+  @objc deinit
+}
+@propertyWrapper open class Keychain<Value> where Value : Swift.Decodable, Value : Swift.Encodable {
+  public init(_ key: Swift.String, defaultValue: Value, accessibility: MustacheFoundation.KeychainItemAccessibility = .afterFirstUnlock)
+  open var wrappedValue: Value {
+    get
+    set
+  }
+  @objc deinit
+}
+@propertyWrapper open class KeychainOptional<Value> where Value : Swift.Decodable, Value : Swift.Encodable {
+  public init(_ key: Swift.String, accessibility: MustacheFoundation.KeychainItemAccessibility = .afterFirstUnlock)
+  open var wrappedValue: Value? {
+    get
+    set
+  }
+  @objc deinit
+}
+@propertyWrapper open class Singleton<Value> {
+  public init(_ key: Swift.String, defaultValue: Value)
+  open var wrappedValue: Value {
+    get
+    set
+  }
+  @objc deinit
+}
+@propertyWrapper open class SingletonOptional<Value> {
+  public init(_ key: Swift.String)
+  open var wrappedValue: Value? {
+    get
+    set
+  }
+  @objc deinit
+}
+@propertyWrapper open class UserDefault<Value> where Value : Swift.Decodable, Value : Swift.Encodable {
+  public init(_ key: Swift.String, defaultValue: Value)
+  open var wrappedValue: Value {
+    get
+    set
+  }
+  @objc deinit
+}
+@propertyWrapper open class UserDefaultOptional<Value> where Value : Swift.Decodable, Value : Swift.Encodable {
+  public init(_ key: Swift.String)
+  open var wrappedValue: Value? {
+    get
+    set
+  }
+  @objc deinit
+}
+public enum KeychainItemAccessibility : Swift.CaseIterable {
+  @available(iOS 4, *)
+  case afterFirstUnlock
+  @available(iOS 4, *)
+  case afterFirstUnlockThisDeviceOnly
+  @available(iOS 8, *)
+  case whenPasscodeSetThisDeviceOnly
+  @available(iOS 4, *)
+  case whenUnlocked
+  @available(iOS 4, *)
+  case whenUnlockedThisDeviceOnly
+  public static var allCases: [MustacheFoundation.KeychainItemAccessibility] {
+    get
+  }
+  public static func == (a: MustacheFoundation.KeychainItemAccessibility, b: MustacheFoundation.KeychainItemAccessibility) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public typealias AllCases = [MustacheFoundation.KeychainItemAccessibility]
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+open class KeychainWrapper {
+  public static let standard: MustacheFoundation.KeychainWrapper
+  public var serviceName: Swift.String {
+    get
+  }
+  public var accessGroup: Swift.String? {
+    get
+  }
+  public init(serviceName: Swift.String, accessGroup: Swift.String? = nil)
+  open func hasValue(forKey key: Swift.String, withAccessibility accessibility: MustacheFoundation.KeychainItemAccessibility? = nil) -> Swift.Bool
+  open func accessibilityOfKey(_ key: Swift.String) -> MustacheFoundation.KeychainItemAccessibility?
+  open func allKeys() -> Swift.Set<Swift.String>
+  open func string(forKey key: Swift.String, withAccessibility accessibility: MustacheFoundation.KeychainItemAccessibility? = nil) -> Swift.String?
+  open func data(forKey key: Swift.String, withAccessibility accessibility: MustacheFoundation.KeychainItemAccessibility? = nil) -> Foundation.Data?
+  open func dataRef(forKey key: Swift.String, withAccessibility accessibility: MustacheFoundation.KeychainItemAccessibility? = nil) -> Foundation.Data?
+  @discardableResult
+  open func set(_ value: Swift.String, forKey key: Swift.String, withAccessibility accessibility: MustacheFoundation.KeychainItemAccessibility? = nil) -> Swift.Bool
+  @discardableResult
+  open func set(_ value: Foundation.Data, forKey key: Swift.String, withAccessibility accessibility: MustacheFoundation.KeychainItemAccessibility? = nil) -> Swift.Bool
+  @available(*, deprecated, message: "remove is deprecated since version 2.2.1, use removeObject instead")
+  @discardableResult
+  open func remove(key: Swift.String, withAccessibility accessibility: MustacheFoundation.KeychainItemAccessibility? = nil) -> Swift.Bool
+  @discardableResult
+  open func removeObject(forKey key: Swift.String, withAccessibility accessibility: MustacheFoundation.KeychainItemAccessibility? = nil) -> Swift.Bool
+  @discardableResult
+  open func removeAllKeys() -> Swift.Bool
+  open class func wipeKeychain()
+  @objc deinit
+}
+extension MustacheFoundation.Configuration : Swift.Equatable {}
+extension MustacheFoundation.Configuration : Swift.Hashable {}
+extension MustacheFoundation.Configuration : Swift.RawRepresentable {}
+extension MustacheFoundation.KeychainItemAccessibility : Swift.Equatable {}
+extension MustacheFoundation.KeychainItemAccessibility : Swift.Hashable {}

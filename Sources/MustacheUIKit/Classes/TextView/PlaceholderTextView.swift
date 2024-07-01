@@ -1,3 +1,6 @@
+
+#if canImport(UIKit)
+
 import UIKit
 
 @IBDesignable
@@ -132,3 +135,4 @@ open class PlaceholderTextView: UITextView {
     }
 
 }
+#endif

@@ -1,3 +1,6 @@
+
+#if canImport(UIKit)
+
 import UIKit
 
 public extension UITableViewHeaderFooterView {
@@ -6,3 +9,5 @@ public extension UITableViewHeaderFooterView {
     class var identifier: String { return String(describing: self) }
 
 }
+
+#endif

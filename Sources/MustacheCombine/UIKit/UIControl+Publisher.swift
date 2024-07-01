@@ -1,7 +1,10 @@
+
+#if canImport(UIKit)
+
 import Combine
 import UIKit
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 extension UIControl {
  
     
@@ -23,7 +26,7 @@ public protocol Combinable {}
 
 extension UIControl: Combinable {}
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 public extension Combinable where Self: UIControl {
     
     func publisher(for event: UIControl.Event) -> UIControl.EventControlPublisher<Self> {
@@ -31,4 +34,5 @@ public extension Combinable where Self: UIControl {
     }
     
 }
+#endif
 

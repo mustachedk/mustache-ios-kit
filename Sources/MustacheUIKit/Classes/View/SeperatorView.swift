@@ -1,8 +1,8 @@
-
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 @IBDesignable
 class SeperatorView: UIView {
     
@@ -35,3 +35,4 @@ class SeperatorView: UIView {
     }
     
 }
+#endif
