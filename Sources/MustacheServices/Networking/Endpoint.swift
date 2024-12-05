@@ -126,14 +126,14 @@ public extension Endpoint {
                 for data in body {
                     switch data {
                         case .text(let key, let value):
-                            var headers = "\(boundary)\r\n"
+                            var headers = "--\(boundary)\r\n"
                             headers += "Content-Disposition: form-data; name=\"\(key)\"\r\n"
                             headers += "\r\n"
                             headers += "\(value)\r\n"
                             guard let data = headers.data(using: .utf8) else { fatalError("Unable to encode \(key) as Data") }
                             content.append(data)
                         case .data(let key,let fileName, let contentType, let value):
-                            var headers = "\(boundary)\r\n"
+                            var headers = "--\(boundary)\r\n"
                             headers += "Content-Disposition:form-data; name=\"\(key)\"; filename=\"\(fileName)\"\r\n"
                             headers += "Content-Type: \(contentType)\r\n"
                             headers += "\r\n"
@@ -144,7 +144,7 @@ public extension Endpoint {
                             content.append(crlf)
                     }
                 }
-                guard let end = "\(boundary)--\r\n".data(using:.utf8) else { fatalError("Unable to encode end for Form Data") }
+                guard let end = "--\(boundary)--\r\n".data(using:.utf8) else { fatalError("Unable to encode end for Form Data") }
                 content.append(end)
                 
                 request.httpBody = content as Data
