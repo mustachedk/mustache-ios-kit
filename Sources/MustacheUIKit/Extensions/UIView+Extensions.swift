@@ -203,15 +203,6 @@ public extension UIView {
     }
 }
 
-fileprivate final class BundleToken {
-  static let bundle: Bundle = {
-#if SWIFT_PACKAGE
-    return Bundle.myModule
-#else
-    return Bundle(for: BundleToken.self)
-#endif
-}()
-
 public enum LayoutAnchor {
     case top(to: NSLayoutYAxisAnchor, constant: CGFloat? = nil)
     case bottom(to: NSLayoutYAxisAnchor, constant: CGFloat? = nil)
@@ -281,3 +272,15 @@ public extension UIView {
 }
 
 #endif
+
+fileprivate final class BundleToken {
+    static let bundle: Bundle = {
+#if SWIFT_PACKAGE
+        return Bundle.myModule
+#else
+        return Bundle(for: BundleToken.self)
+#endif
+    }()
+}
+
+
