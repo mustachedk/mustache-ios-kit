@@ -1,26 +1,10 @@
-import RxSwift
-import RxCocoa
+
 import Foundation
 
-public func castOrThrow<T>(_ resultType: T.Type, _ object: Any) throws -> T {
-    guard let returnValue = object as? T else {
-        throw RxCocoaError.castingError(object: object as AnyObject, targetType: resultType)
-    }
+#if canImport(RxCocoa)
 
-    return returnValue
-}
-
-public func castOptionalOrThrow<T>(_ resultType: T.Type, _ object: Any) throws -> T? {
-    if NSNull().isEqual(object) {
-        return nil
-    }
-
-    guard let returnValue = object as? T else {
-        throw RxCocoaError.castingError(object: object as AnyObject, targetType: resultType)
-    }
-
-    return returnValue
-}
+import RxSwift
+import RxCocoa
 
 infix operator <->
 
@@ -84,6 +68,4 @@ public func <-><T: Equatable>(left: ControlProperty<T>, right: PublishSubject<T>
     return Disposables.create(leftToRight, rightToLeft)
 }
 
-public enum MustacheRxSwiftError: Error {
-    case deallocated
-}
+#endif

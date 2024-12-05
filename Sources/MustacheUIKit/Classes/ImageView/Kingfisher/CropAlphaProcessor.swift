@@ -1,4 +1,6 @@
 
+#if canImport(Kingfisher)
+
 import Foundation
 import Kingfisher
 import UIKit
@@ -88,3 +90,5 @@ public extension UIImage {
         return context
     }
 }
+
+#endif

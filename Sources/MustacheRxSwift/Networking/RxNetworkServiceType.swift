@@ -1,6 +1,9 @@
+
 import Foundation
-import RxSwift
+
 import MustacheServices
+
+import RxSwift
 import Resolver
 
 public protocol RxNetworkServiceType {
@@ -63,7 +66,7 @@ public class RxNetworkService: NSObject, RxNetworkServiceType {
 
         return Single<T>.create { [weak self] observer in
                     guard let self = self else {
-                        observer(.failure(MustacheRxSwiftError.deallocated))
+                        observer(.failure(RxNetworkServiceTypeError.deallocated))
                         return Disposables.create()
                     }
 
@@ -84,4 +87,8 @@ public class RxNetworkService: NSObject, RxNetworkServiceType {
                 }
         .observe(on: MainScheduler.instance)
     }
+}
+
+enum RxNetworkServiceTypeError: Error {
+    case deallocated
 }

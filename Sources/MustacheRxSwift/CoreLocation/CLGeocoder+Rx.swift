@@ -1,6 +1,9 @@
-import RxSwift
+
+#if canImport(CoreLocation)
 import CoreLocation
 import Contacts
+
+import RxSwift
 
 public extension CLLocation {
     convenience init(coordinate: CLLocationCoordinate2D) {
@@ -75,3 +78,5 @@ private func geocodeHandler(observer: AnyObserver<[CLPlacemark]>, geocode: @esca
 }
 
 private let waitForCompletionQueue = DispatchQueue(label: "WaitForGeocodeCompletionQueue")
+
+#endif
