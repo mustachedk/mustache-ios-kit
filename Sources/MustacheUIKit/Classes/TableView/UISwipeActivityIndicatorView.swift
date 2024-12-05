@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -33,7 +33,7 @@ open class UISwipeActivityIndicatorView: UIActivityIndicatorView {
 
 extension UIView {
 
-    func addActivityIndicatorView(color: UIColor = .white) -> UISwipeActivityIndicatorView? {
+    public func addActivityIndicatorView(color: UIColor = .white) -> UISwipeActivityIndicatorView? {
 
         if NSStringFromClass(type(of: self)) == "UISwipeActionStandardButton",
            let label = self.subviews.first(where: { NSStringFromClass(type(of: $0)) == "UIButtonLabel" }),
@@ -53,3 +53,4 @@ extension UIView {
     }
 
 }
+#endif

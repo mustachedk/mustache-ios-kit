@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -32,3 +32,4 @@ open class GradientMultipleView: UIView {
 
 
 }
+#endif

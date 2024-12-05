@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import Foundation
 import UIKit
 import MustacheFoundation
@@ -40,3 +40,4 @@ public extension UIColor {
     }
     
 }
+#endif

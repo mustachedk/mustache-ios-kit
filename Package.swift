@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "MustacheKit",
-    platforms: [.iOS(.v12), .macOS(.v10_14)],
+    platforms: [.iOS(.v13), .macOS(.v10_14)],
     products: [
         .library(
             name: "MustacheFoundation",
@@ -21,11 +21,11 @@ let package = Package(
             targets: ["MustacheRxSwift"]),
         .library(
             name: "MustacheCombine",
-            targets: ["MustacheCombine"]),
+            targets: ["MustacheCombine"])
     ],
     dependencies: [
-        .package(url: "https://github.com/hmlongco/Resolver.git", exact: "1.5.0"),
-        .package(url: "https://github.com/ReactiveX/RxSwift.git", exact: "6.6.0"),
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", "6.6.0"..."6.6.0"),
+        .package(url: "https://github.com/onevcat/Kingfisher.git", "7.11.0"..."7.11.0")
     ],
     targets: [
         .target(
@@ -33,18 +33,33 @@ let package = Package(
             dependencies: []),
         .target(
             name: "MustacheServices",
-            dependencies: ["MustacheFoundation", "Resolver"]),
+            dependencies: ["MustacheFoundation"]),
         .target(
             name: "MustacheUIKit",
-            dependencies: ["MustacheFoundation"]),
+            dependencies: [
+                "MustacheFoundation",
+                .product(name: "Kingfisher", package: "Kingfisher")                
+            ],
+            resources: [
+                .copy("Resources/README.md"),
+                .process("Resources/Assets.xcassets"),
+            ]
+        ),
         .target(
             name: "MustacheRxSwift",
-            dependencies: ["RxSwift", .product(name: "RxCocoa", package: "RxSwift"), "MustacheServices", "MustacheUIKit"]),
+            dependencies: [
+                "RxSwift",
+                .product(name: "RxRelay", package: "RxSwift"),
+                .product(name: "RxCocoa", package: "RxSwift"),
+                .target(name: "MustacheServices"),
+                .target(name: "MustacheUIKit")
+            ]),
         .target(
             name: "MustacheCombine",
-            dependencies: ["MustacheFoundation"]),
+            dependencies: ["MustacheFoundation", "MustacheServices"]),
         .testTarget(
             name: "MustacheCombineTest",
             dependencies: ["MustacheCombine"]),
     ]
 )
+//https://github.com/ReactiveX/RxSwift/releases/download/6.6.0/RxSwift.xcframework.zip

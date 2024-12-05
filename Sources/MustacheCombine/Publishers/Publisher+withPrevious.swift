@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 public extension Publisher {
     
     /// Includes the current element as well as the previous element from the upstream publisher in a tuple where the previous element is optional.

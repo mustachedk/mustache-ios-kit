@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import UIKit
 
 @IBDesignable
@@ -197,3 +198,4 @@ open class Button: UIButton {
     }
 
 }
+#endif

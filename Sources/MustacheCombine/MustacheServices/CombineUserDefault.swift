@@ -5,10 +5,10 @@ import Combine
 // Credit
 // https://gist.github.com/simonbs/61c8269e1b0550feab606ee9890fa72b
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 public typealias UserDefaultC = UserDefaultCombine
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 @propertyWrapper
 public class UserDefaultCombine<T: Codable>: NSObject {
     
@@ -54,10 +54,10 @@ public class UserDefaultCombine<T: Codable>: NSObject {
     
 }
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 public typealias UserDefaultCOptional = UserDefaultCombineOptional
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 @propertyWrapper
 public class UserDefaultCombineOptional<T: Codable>: NSObject {
     

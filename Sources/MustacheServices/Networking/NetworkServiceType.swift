@@ -1,5 +1,4 @@
 import Foundation
-import Resolver
 
 public protocol NetworkServiceType: AnyObject {
     

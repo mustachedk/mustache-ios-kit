@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import UIKit
 
 @IBDesignable
@@ -74,3 +74,4 @@ open class ExpandingTableView: UITableView {
 		self.isScrollEnabled = (self.contentSize.height > self.frame.height)
 	}
 }
+#endif

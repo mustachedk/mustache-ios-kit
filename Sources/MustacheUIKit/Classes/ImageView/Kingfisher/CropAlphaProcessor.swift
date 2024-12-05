@@ -1,9 +1,10 @@
 
-#if canImport(Kingfisher)
-
+#if canImport(UIKit)
 import Foundation
-import Kingfisher
 import UIKit
+
+#if canImport(Kingfisher)
+import Kingfisher
 
 /// A ImageProcessor that cuts of the surrounding alpha of an UIImage
 public struct CropAlphaProcessor: ImageProcessor {
@@ -23,6 +24,8 @@ public struct CropAlphaProcessor: ImageProcessor {
         }
     }
 }
+
+#endif
 
 /* Extension for croping transparent pixels
  example:

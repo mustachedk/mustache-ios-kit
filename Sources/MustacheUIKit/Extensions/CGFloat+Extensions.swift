@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import UIKit
 
 public extension CGFloat {
@@ -42,3 +43,4 @@ extension Optional where Wrapped == CGFloat {
         }
     }
 }
+#endif

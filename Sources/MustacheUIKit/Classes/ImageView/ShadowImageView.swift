@@ -1,3 +1,6 @@
+
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 
@@ -84,3 +87,5 @@ public class ShadowImageView: UIImageView {
     }
 
 }
+
+#endif

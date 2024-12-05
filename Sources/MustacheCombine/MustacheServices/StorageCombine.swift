@@ -7,7 +7,34 @@ private var singletonMemoryContainer: [String: Any] = [:]
 private var sharedMemoryKeyContainer = NSHashTable<NSString>.weakObjects()
 private var sharedMemoryValueContainer = NSMapTable<NSString, AnyObject>.weakToStrongObjects()
 
-@available(iOS 13.0, *)
+
+@available(iOS 13.0, macOS 10.15, *)
+@propertyWrapper
+public class StorageCombineDefault<T: Codable>: NSObject {
+    
+    public var wrappedValue: T {
+        get {
+            return self.storage.wrappedValue ?? self.defaultValue
+        }
+        set {
+            self.storage.wrappedValue = newValue
+        }
+    }
+    
+    public var projectedValue: AnyPublisher<T, Never> {
+        return self.storage.projectedValue.map { $0 ?? self.defaultValue }.eraseToAnyPublisher()
+    }
+    
+    private var defaultValue: T
+    private var storage: StorageCombine<T>
+    
+    public init(_ key: String, mode: StorageMode, defaultValue: T, expiration: ExpirationType = .none) {
+        self.storage = StorageCombine(key, mode: mode, defaultValue: defaultValue, expiration: expiration)
+        self.defaultValue = defaultValue
+    }
+}
+
+@available(iOS 13.0, macOS 10.15, *)
 @propertyWrapper
 public class StorageCombine<T: Codable>: NSObject {
     
@@ -34,6 +61,10 @@ public class StorageCombine<T: Codable>: NSObject {
             }
         }
     }
+    
+    // MARK: Configuraation
+    
+    private var configured: Bool = false
     
     // MARK: Configuraation
     
@@ -85,8 +116,8 @@ public class StorageCombine<T: Codable>: NSObject {
         
         self.localeChangeObserver = NotificationCenter.default.addObserver(forName: notificationName(key: self.key),
                                                                            object: object,
-                                                                           queue: .main) { [unowned self] notification in
-            
+                                                                           queue: nil) { [weak self] notification in
+            guard let self else { return }
             // Sets the value and sends an event downstream
             let value = notification.userInfo?[self.valueUserInfoKey] as? T
             self.subject.value = value
@@ -98,10 +129,13 @@ public class StorageCombine<T: Codable>: NSObject {
         if let defaultValue, self.wrappedValue == nil {
             // Sets the initial default value and sends an event downstream if no other value is previuosly stored
             self.wrappedValue = defaultValue
+            self.configured = true
         } else if let wrappedValue = self.wrappedValue {
             // Sends an event if the initial value is present
+            self.configured = true
             self.wrappedValue = wrappedValue
         } else {
+            self.configured = true
             // Sends an event with an empty value
             self.wrappedValue = nil
         }
@@ -204,7 +238,7 @@ public class StorageCombine<T: Codable>: NSObject {
 
 
 // MARK: StorageMode.userDefaults
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 extension StorageCombine {
     
     func getUserDefaults(defaults: UserDefaults) -> T? {
@@ -232,6 +266,9 @@ extension StorageCombine {
             defaults.removeObject(forKey: self.key)
         }
         
+        // Avoid sending inital value two times
+        if !self.configured { return }
+        
         // Sends notification so that subscribers of CurrentValueSubject gets the newest object
         NotificationCenter.default.post(name: notificationName(key: self.key),
                                         object: nil,
@@ -240,7 +277,7 @@ extension StorageCombine {
     
 }
 // MARK: StorageMode.keychain
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 extension StorageCombine {
     
     func getKeychain(accessibility: KeychainItemAccessibility) -> T? {
@@ -271,6 +308,9 @@ extension StorageCombine {
             KeychainWrapper.standard.removeObject(forKey: self.key, withAccessibility: accessibility)
         }
         
+        // Avoid sending inital value two times
+        if !self.configured { return }
+        
         // Sends notification so that subscribers of CurrentValueSubject gets the newest object
         NotificationCenter.default.post(name: notificationName(key: self.key),
                                         object: nil,
@@ -280,7 +320,7 @@ extension StorageCombine {
 }
 
 // MARK: StorageMode.memory
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, *)
 extension StorageCombine {
     
     func getMemory(scope: MemoryScope) -> T? {
@@ -311,8 +351,15 @@ extension StorageCombine {
         switch scope {
             case .singleton:
                 
-                let cache = CacheContainer(value: value, createdAt: Date())
-                singletonMemoryContainer[self.key] = cache
+                if let value {
+                    let cache = CacheContainer(value: value, createdAt: Date())
+                    singletonMemoryContainer[self.key] = cache
+                } else {
+                    singletonMemoryContainer[self.key] = nil
+                }            
+                
+                // Avoid sending inital value two times
+                if !self.configured { return }
                 
                 // Sends notification so that subscribers of CurrentValueSubject gets the newest object
                 NotificationCenter.default.post(name: notificationName(key: self.key),
@@ -321,12 +368,15 @@ extension StorageCombine {
                 
             case .unique:
                 
-                if let value = value {
+                if let value {
                     let cache = CacheContainer(value: value, createdAt: Date())
                     self.uniqueMemoryStorage = cache
                 } else {
                     self.uniqueMemoryStorage = nil
                 }
+                
+                // Avoid sending inital value two times
+                if !self.configured { return }
                 
                 // Sends notification so that subscribers of CurrentValueSubject gets the newest object
                 NotificationCenter.default.post(name: notificationName(key: self.key),
@@ -341,6 +391,9 @@ extension StorageCombine {
                 } else {
                     sharedMemoryValueContainer.removeObject(forKey: self.sharedMemoryKey)
                 }
+                
+                // Avoid sending inital value two times
+                if !self.configured { return }
                 
                 // Sends notification so that subscribers of CurrentValueSubject gets the newest object
                 NotificationCenter.default.post(name: notificationName(key: self.key),

@@ -1,12 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "resolver",
+      "identity" : "kingfisher",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hmlongco/Resolver.git",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
       "state" : {
-        "revision" : "97de0b0320036607564af4a60025b48f8d041221",
-        "version" : "1.5.0"
+        "revision" : "5b92f029fab2cce44386d28588098b5be0824ef5",
+        "version" : "7.11.0"
       }
     },
     {

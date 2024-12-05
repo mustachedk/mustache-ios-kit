@@ -1,4 +1,6 @@
 
+#if canImport(UIKit)
+
 import UIKit
 
 #if canImport(RxCocoa)
@@ -21,5 +23,7 @@ public extension Reactive where Base: UIPickerView {
     }
 
 }
+
+#endif
 
 #endif

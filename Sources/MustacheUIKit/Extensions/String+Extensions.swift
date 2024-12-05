@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -21,3 +21,4 @@ public extension String {
         return CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, CFRange(location: 0, length: 0), nil, CGSize(width: width, height: .greatestFiniteMagnitude), nil)
     }
 }
+#endif

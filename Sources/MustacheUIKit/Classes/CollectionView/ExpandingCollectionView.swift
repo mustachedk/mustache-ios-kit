@@ -1,4 +1,5 @@
 
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -28,3 +29,4 @@ open class ExpandingCollectionView: UICollectionView {
     }
 
 }
+#endif

@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -38,3 +38,4 @@ open class ImageButton: Button {
     }
 
 }
+#endif

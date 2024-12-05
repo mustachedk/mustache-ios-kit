@@ -1,6 +1,10 @@
 
 import Foundation
+
+#if canImport(UIKit)
 import UIKit
+#endif
+
 import CoreLocation
 
 import MustacheServices
@@ -20,7 +24,7 @@ public protocol RxGeoLocationServiceType {
 
 }
 
-@available(iOS 14.0, *)
+@available(iOS 14.0, macOS 15, *)
 public class RxGeoLocationService: RxGeoLocationServiceType {
 
     public var authorized: RxObservable<Bool>!

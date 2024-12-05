@@ -1,4 +1,4 @@
-
+#if canImport(UIKit)
 import Foundation
 import UIKit
 import MustacheFoundation
@@ -96,3 +96,4 @@ public extension NSNotification.Name {
     static let updatedTranslations = NSNotification.Name(rawValue: "updatedTranslations")
 
 }
+#endif

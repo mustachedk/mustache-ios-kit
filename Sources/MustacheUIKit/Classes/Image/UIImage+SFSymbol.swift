@@ -1,7 +1,7 @@
-
+#if canImport(UIKit)
 import UIKit
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 public extension SFSymbol {
     
     var name: String {
@@ -13,7 +13,7 @@ public extension SFSymbol {
     }
 }
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 15, *)
 public extension UIImage {
     
     convenience init?(systemName symbol: SFSymbol, config: UIImage.SymbolConfiguration? = nil) {
@@ -24,3 +24,4 @@ public extension UIImage {
         self.init(systemName: symbol.name, withConfiguration: config)
     }
 }
+#endif
