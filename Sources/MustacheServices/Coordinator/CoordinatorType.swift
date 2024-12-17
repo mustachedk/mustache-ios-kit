@@ -5,7 +5,7 @@ public protocol CoordinatorType: NSObjectProtocol {
     
     func start() throws
     
-    func stop() throws
+    func stop(with completion: Completion?) throws
     
     func transition(to transition: Transition) throws
     
@@ -15,11 +15,21 @@ public protocol CoordinatorType: NSObjectProtocol {
 
 public extension CoordinatorType {
     
-    func stop() throws { }
+    func stop() throws {
+        try self.stop(with: nil)
+    }
+    
+    func stop(with completion: Completion?) throws { }
+    
+    func route(to route: Route) throws {}
     
 }
 
 public protocol Transition {
+    
+}
+
+public protocol Completion {
     
 }
 
