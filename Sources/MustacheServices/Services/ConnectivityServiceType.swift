@@ -17,7 +17,7 @@ public class ConnectivityService: ConnectivityServiceType {
     
     public var handler: ConnectionAvailableHandler? = nil {
         didSet {
-            if let handler {
+            if self.handler != nil {
                 self.startMonitoring()
             } else {
                 self.stopMonitoring()

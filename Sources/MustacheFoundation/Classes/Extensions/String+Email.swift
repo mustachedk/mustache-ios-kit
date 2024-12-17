@@ -5,7 +5,7 @@ public extension String {
     
     /// Uses NSDataDetector to detect if string is valid email
     var isEmail: Bool {
-        var email = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        let email = self.trimmingCharacters(in: .whitespacesAndNewlines)
         
         let types: NSTextCheckingResult.CheckingType = .link
         
