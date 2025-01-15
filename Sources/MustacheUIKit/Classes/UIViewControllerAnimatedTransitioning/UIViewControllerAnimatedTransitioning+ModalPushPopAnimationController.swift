@@ -73,6 +73,7 @@ public class ModalPushPopAnimationController: NSObject, UIViewControllerAnimated
         } else {
             
             containerView.insertSubview(toViewController.view, belowSubview: fromViewController.view)
+            toViewController.view.frame = fromViewController.view.frame
             
             UIView.animate(withDuration: duration,
                            delay: 0,
@@ -81,6 +82,7 @@ public class ModalPushPopAnimationController: NSObject, UIViewControllerAnimated
                 fromViewController.view.frame = containerView.frame.offsetBy(dx: 0, dy: containerView.frame.height)
             },
                            completion: { _ in
+                fromViewController.view.removeFromSuperview()
                 transitionContext.completeTransition(true)
             })
             
