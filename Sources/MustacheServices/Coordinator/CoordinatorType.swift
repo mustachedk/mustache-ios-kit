@@ -8,6 +8,8 @@ public protocol CoordinatorType: NSObjectProtocol {
     
     func start() throws
     
+    func stop() throws
+    
     func stop(with completion: Completion?) throws
     
     func transition(to transition: Transition) throws
