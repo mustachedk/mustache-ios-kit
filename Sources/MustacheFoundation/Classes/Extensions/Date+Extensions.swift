@@ -29,7 +29,7 @@ public extension Date {
     }
     
     static var nowSafe: Date {
-        if #available(iOS 15, macOS 12, *) {
+        if #available(iOS 15, macOS 12, watchOS 8, *) {
             return self.now
         } else {
             return Date()

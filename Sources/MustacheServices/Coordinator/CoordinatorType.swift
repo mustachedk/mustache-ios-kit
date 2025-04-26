@@ -1,4 +1,5 @@
 import Foundation
+#if os(iOS)
 import UIKit
 
 // https://medium.com/concretelatinoamérica/inverse-reference-coordinator-pattern-d5a5948c0d90
@@ -41,3 +42,5 @@ public protocol Completion {
 public protocol Route {
     
 }
+
+#endif

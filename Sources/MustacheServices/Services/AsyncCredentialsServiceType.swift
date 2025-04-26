@@ -2,7 +2,7 @@ import Foundation
 import MustacheFoundation
 
 @available(iOS 13.0, macOS 15, *)
-public protocol AsyncCredentialsServiceType: AnyActor {
+public protocol AsyncCredentialsServiceType: Actor {
     
     static var accessibility: KeychainItemAccessibility { get set }
     

@@ -7,6 +7,7 @@ import UserNotifications
 import MustacheFoundation
 import Combine
 
+
 @available(iOS 14.0, macOS 10.15, *)
 public protocol PermissionsServiceType {
     
@@ -30,7 +31,7 @@ public protocol PermissionsServiceType {
 }
 
 @available(iOS 14.0, macOS 15, *)
-public class PermissionsService: NSObject, PermissionsServiceType {
+final public class PermissionsService: NSObject, PermissionsServiceType {
     
     private var locationAuthorizationStatus: CLAuthorizationStatus {
         return self.locationManager.authorizationStatus
