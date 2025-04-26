@@ -1,5 +1,7 @@
 import Foundation
 
+#if os(iOS)
+
 public protocol CoordinatorDelegate: CoordinatorType {
     
     func completed(child: CoordinatorType?, completion: Completion?)
@@ -15,3 +17,5 @@ public extension CoordinatorDelegate {
     func completed(child: CoordinatorType?, completion: Completion?) {}
     
 }
+
+#endif

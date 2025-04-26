@@ -8,7 +8,7 @@ import MustacheFoundation
 import Combine
 
 
-@available(iOS 14.0, macOS 10.15, *)
+@available(iOS 14.0, macOS 10.15, watchOS 7.0, *)
 public protocol PermissionsServiceType {
     
     var isLocationAllowed: Bool { get }
@@ -30,7 +30,7 @@ public protocol PermissionsServiceType {
     func bluetoothPermission() async throws -> Bool
 }
 
-@available(iOS 14.0, macOS 15, *)
+@available(iOS 14.0, macOS 15, watchOS 7.0, *)
 final public class PermissionsService: NSObject, PermissionsServiceType {
     
     private var locationAuthorizationStatus: CLAuthorizationStatus {
@@ -47,6 +47,13 @@ final public class PermissionsService: NSObject, PermissionsServiceType {
         let authorizationStatus = self.locationAuthorizationStatus
         return authorizationStatus == .authorizedAlways && CLLocationManager.locationServicesEnabled()
     }
+#elseif os(watchOS)
+    public var isLocationAllowed: Bool {
+        let authorizationStatus = self.locationAuthorizationStatus
+        return (authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways) && CLLocationManager.locationServicesEnabled()
+    }
+#else
+    public var isLocationAllowed: Bool { return false }
 #endif
     
     private lazy var locationStatusSubject: CurrentValueSubject<CLAuthorizationStatus, Never> = {
@@ -62,9 +69,17 @@ final public class PermissionsService: NSObject, PermissionsServiceType {
     @UserDefault("isNotificationAllowed", defaultValue: false)
     public var isNotificationAllowed: Bool
     
+#if os(iOS)
     public var isCameraAllowed: Bool {
         return AVCaptureDevice.authorizationStatus(for: .video) != .authorized
     }
+#elseif os(macOS)
+    public var isCameraAllowed: Bool {
+        return AVCaptureDevice.authorizationStatus(for: .video) != .authorized
+    }
+#else
+    public var isCameraAllowed: Bool { return false }
+#endif
     
     public var isBlueToothAllowed: Bool {
         return CBCentralManager.authorization == .allowedAlways
@@ -101,9 +116,23 @@ final public class PermissionsService: NSObject, PermissionsServiceType {
         return result
     }
     
+#if os(iOS)
     public func cameraRecordPermission() async throws -> Bool {
         return await AVCaptureDevice.requestAccess(for: .video)
     }
+#elseif os(macOS)
+    public func cameraRecordPermission() async throws -> Bool {
+        return await AVCaptureDevice.requestAccess(for: .video)
+    }
+#elseif os(watchOS)
+    public func cameraRecordPermission() async throws -> Bool {
+        return false
+    }
+#else
+    public func cameraRecordPermission() async throws -> Bool {
+        return false
+    }
+#endif
     
     public func bluetoothPermission() async throws -> Bool {
         return try await withCheckedThrowingContinuation { [weak self] continuation in
@@ -127,7 +156,7 @@ final public class PermissionsService: NSObject, PermissionsServiceType {
     }
 }
 
-@available(iOS 14.0, macOS 15, *)
+@available(iOS 14.0, macOS 15, watchOS 7.0, *)
 extension PermissionsService: CLLocationManagerDelegate {
     
     @objc public func locationManagerTimeout() {
@@ -169,7 +198,7 @@ extension PermissionsService: CLLocationManagerDelegate {
     
 }
 
-@available(iOS 14.0, macOS 15, *)
+@available(iOS 14.0, macOS 15, watchOS 7.0, *)
 extension PermissionsService: CBPeripheralManagerDelegate {
     
     @objc public func peripheralManagerTimeout() {

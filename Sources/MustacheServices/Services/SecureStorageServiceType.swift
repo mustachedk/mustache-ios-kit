@@ -3,6 +3,7 @@ import Foundation
 import MustacheFoundation
 import LocalAuthentication
 
+@available(watchOS, unavailable)
 public protocol SecureStorageServiceType {
     
     var passcodeSet: Bool { get }
@@ -38,6 +39,7 @@ public protocol SecureStorageServiceType {
     
 }
 
+@available(watchOS, unavailable)
 public class SecureStorageService: SecureStorageServiceType {
     
     public var passcodeSet: Bool {
@@ -61,8 +63,8 @@ public class SecureStorageService: SecureStorageServiceType {
     
     public var isFaceIdSupported: Bool {
         let context = LAContext()
-        if #available(macOS 10.15, *) {
-            return context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) && context.biometryType == .faceID
+        if #available(macOS 10.15, watchOS 11.0, *) {
+                return context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) && context.biometryType == .faceID
         } else {
             return false
         }
@@ -70,7 +72,11 @@ public class SecureStorageService: SecureStorageServiceType {
     
     public var isTouchIdSupported: Bool {
         let context = LAContext()
-        return context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) && context.biometryType == .touchID
+        if #available(watchOS 11.0, *) {
+            return context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) && context.biometryType == .touchID
+        } else {
+            return false
+        }
     }
     
     public var dataStoredWithPin: Bool {
@@ -311,6 +317,7 @@ public class SecureStorageService: SecureStorageServiceType {
     
 }
 
+@available(watchOS, unavailable)
 public class SimulatorSecureStorageService: SecureStorageService {
     
     @UserDefault("SimulatorSecureStorageService.storage", defaultValue: [:])
@@ -362,6 +369,7 @@ public class SimulatorSecureStorageService: SecureStorageService {
     
 }
 
+@available(watchOS, unavailable)
 extension SecureStorageService {
     
     static let service: String = "SecureStorageService.Service"
