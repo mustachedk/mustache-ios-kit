@@ -3,7 +3,7 @@ import Foundation
 import UIKit
 
 // https://medium.com/concretelatinoamérica/inverse-reference-coordinator-pattern-d5a5948c0d90
-public protocol CoordinatorType: NSObjectProtocol {
+public protocol CoordinatorType: NSObjectProtocol, ObservableObject {
     
     var baseController: UIViewController? { get }
     
