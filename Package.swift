@@ -41,8 +41,7 @@ let package = Package(
                 .product(name: "Kingfisher", package: "Kingfisher")                
             ],
             resources: [
-                .copy("Resources/README.md"),
-                .process("Resources/Assets.xcassets"),
+                .copy("Resources/README.md")
             ]
         ),
         .target(

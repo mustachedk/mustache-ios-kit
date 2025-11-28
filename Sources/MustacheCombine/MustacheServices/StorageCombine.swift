@@ -1,470 +1,347 @@
-
 import Foundation
 import MustacheFoundation
 import Combine
 
-private var singletonMemoryContainer: [String: Any] = [:]
-private var sharedMemoryKeyContainer = NSHashTable<NSString>.weakObjects()
-private var sharedMemoryValueContainer = NSMapTable<NSString, AnyObject>.weakToStrongObjects()
+// MARK: - Thread-Safe Storage Implementation
 
+/// A thread-safe property wrapper that provides storage with Combine publishers
+@available(iOS 13.0, macOS 10.15, *)
+@propertyWrapper
+public class StorageCombine<T: Codable>: NSObject {
+    
+    // MARK: - Public API
+    
+    public var wrappedValue: T? {
+        get { storage.getValue() }
+        set { storage.setValue(newValue) }
+    }
+    
+    public var projectedValue: AnyPublisher<T?, Never> {
+        storage.publisher
+    }
+    
+    // MARK: - Private Implementation
+    
+    private let storage: StorageBackend<T>
+    
+    // MARK: - Initialization
+    
+    public init(_ key: String, mode: StorageMode, defaultValue: T? = nil, expiration: ExpirationType = .none) {
+        self.storage = StorageBackend(key: key, mode: mode, defaultValue: defaultValue, expiration: expiration)
+        super.init()
+    }
+}
 
+/// Non-optional variant with default value
 @available(iOS 13.0, macOS 10.15, *)
 @propertyWrapper
 public class StorageCombineDefault<T: Codable>: NSObject {
     
     public var wrappedValue: T {
-        get {
-            return self.storage.wrappedValue ?? self.defaultValue
-        }
-        set {
-            self.storage.wrappedValue = newValue
-        }
+        get { self.storage.getValue() ?? defaultValue }
+        set { self.storage.setValue(newValue) }
     }
     
     public var projectedValue: AnyPublisher<T, Never> {
-        return self.storage.projectedValue.map { $0 ?? self.defaultValue }.eraseToAnyPublisher()
+        self.storage.publisher
+            .map { [weak self] value in
+                value ?? self?.defaultValue
+            }
+            .compactMap({ $0 })
+            .eraseToAnyPublisher()
     }
     
-    private var defaultValue: T
-    private var storage: StorageCombine<T>
+    private let storage: StorageBackend<T>
+    private let defaultValue: T
     
     public init(_ key: String, mode: StorageMode, defaultValue: T, expiration: ExpirationType = .none) {
-        self.storage = StorageCombine(key, mode: mode, defaultValue: defaultValue, expiration: expiration)
+        self.storage = StorageBackend(key: key, mode: mode, defaultValue: defaultValue, expiration: expiration)
         self.defaultValue = defaultValue
+        super.init()
     }
 }
 
+// MARK: - Storage Backend
+
 @available(iOS 13.0, macOS 10.15, *)
-@propertyWrapper
-public class StorageCombine<T: Codable>: NSObject {
-    
-    public var wrappedValue: T? {
-        get {
-            switch self.mode {
-                case .userDefaults(let defaults):
-                    return self.getUserDefaults(defaults: defaults)
-                case .keychain(let accessibility):
-                    return self.getKeychain(accessibility: accessibility)
-                case .memory(let scope):
-                    return self.getMemory(scope: scope)
-            }
-            
-        }
-        set {
-            switch self.mode {
-                case .userDefaults(let defaults):
-                    self.setUserDefaults(defaults: defaults, value: newValue)
-                case .keychain(let accessibility):
-                    self.setKeychain(accessibility: accessibility, value: newValue)
-                case .memory(let scope):
-                    self.setMemory(scope: scope, value: newValue)
-            }
-        }
-    }
-    
-    // MARK: Configuraation
-    
-    private var configured: Bool = false
-    
-    // MARK: Configuraation
+private class StorageBackend<T: Codable> {
     
     private let key: String
     private let mode: StorageMode
     private let expiration: ExpirationType
     
-    // MARK: Combine
+    private let subject: CurrentValueSubject<T?, Never>
+    private let lock = NSLock()
     
-    private var subject: CurrentValueSubject<T?, Never>
-    private var localeChangeObserver: NSObjectProtocol!
+    // For unique memory scope, store the value in the instance
+    private var uniqueMemoryStorage: CacheContainer<T>?
     
-    // MARK: Helpers
-    
-    private let valueUserInfoKey: String = "StorageCombine-valueUserInfoKey"
-    
-    // MARK: propertyWrapper variables
-    
-    public var projectedValue: AnyPublisher<T?, Never> {
-        return subject.eraseToAnyPublisher()
+    var publisher: AnyPublisher<T?, Never> {
+        self.subject.eraseToAnyPublisher()
     }
     
-    public init(_ key: String, mode: StorageMode, defaultValue: T? = nil, expiration: ExpirationType = .none) {
+    init(key: String, mode: StorageMode, defaultValue: T?, expiration: ExpirationType) {
         self.key = key
         self.mode = mode
         self.expiration = expiration
-        self.subject = CurrentValueSubject(defaultValue)
         
-        super.init()
-        
-        self.configurePublisher()
-        self.configureInitialValue(defaultValue: defaultValue)
-        self.configureInMemory()
-    }
-    
-    convenience init(_ key: String, mode: StorageMode, defaultValue: T? = nil, cacheExpiration: Double? = nil) {
-        let expiration = cacheExpiration.exists ? ExpirationType.seconds(cacheExpiration!) : .none
-        self.init(key, mode: mode, defaultValue: defaultValue, expiration: expiration)
-    }
-    
-    func configurePublisher() {
-        
-        let object: Any? = switch mode {
-        case .memory(let scope) where scope == .unique:
-            self
-        default:
-            nil
-        }
-        
-        self.localeChangeObserver = NotificationCenter.default.addObserver(forName: notificationName(key: self.key),
-                                                                           object: object,
-                                                                           queue: nil) { [weak self] notification in
-            guard let self else { return }
-            // Sets the value and sends an event downstream
-            let value = notification.userInfo?[self.valueUserInfoKey] as? T
-            self.subject.value = value
+        // For unique scope, don't read from shared storage
+        let existing: T?
+        if case .memory(let scope) = mode, scope == .unique {
+            existing = nil
+            if let defaultValue = defaultValue {
+                self.uniqueMemoryStorage = CacheContainer(value: defaultValue, createdAt: Date())
+            }
+        } else {
+            // Read initial value from storage
+            existing = Self.readFromStorage(key: key, mode: mode, expiration: expiration)
             
+            // Write default value if needed
+            if existing == nil, let defaultValue = defaultValue {
+                Self.writeToStorage(key: key, mode: mode, value: defaultValue)
+            }
         }
+        
+        self.subject = CurrentValueSubject(existing ?? defaultValue)
     }
     
-    func configureInitialValue(defaultValue: T?) {
-        if let defaultValue, self.wrappedValue == nil {
-            // Sets the initial default value and sends an event downstream if no other value is previuosly stored
-            self.wrappedValue = defaultValue
-            self.configured = true
-        } else if let wrappedValue = self.wrappedValue {
-            // Sends an event if the initial value is present
-            self.configured = true
-            self.wrappedValue = wrappedValue
+    func getValue() -> T? {
+        lock.lock()
+        defer { lock.unlock() }
+        
+        // For unique scope, read from instance storage
+        if case .memory(let scope) = mode, scope == .unique {
+            guard let container = uniqueMemoryStorage else { return nil }
+            
+            // Check expiration
+            guard Self.isValid(container: container, expiration: expiration) else {
+                uniqueMemoryStorage = nil
+                return nil
+            }
+            
+            return container.value
+        }
+        
+        return Self.readFromStorage(key: key, mode: mode, expiration: expiration)
+    }
+    
+    func setValue(_ value: T?) {
+        lock.lock()
+        
+        // For unique scope, write to instance storage
+        if case .memory(let scope) = mode, scope == .unique {
+            if let value = value {
+                uniqueMemoryStorage = CacheContainer(value: value, createdAt: Date())
+            } else {
+                uniqueMemoryStorage = nil
+            }
+            
+            let valueToSend = value
+            lock.unlock()
+            
+            // Send update after releasing lock
+            self.subject.send(valueToSend)
+            return
+        }
+        
+        if let value = value {
+            Self.writeToStorage(key: self.key, mode: self.mode, value: value)
         } else {
-            self.configured = true
-            // Sends an event with an empty value
-            self.wrappedValue = nil
+            Self.clearStorage(key: self.key, mode: self.mode)
+        }
+        
+        let valueToSend = value
+        lock.unlock()
+        
+        // Send update after releasing lock to avoid potential deadlocks
+        self.subject.send(valueToSend)
+    }
+    
+    // MARK: - Storage Operations
+    
+    private static func readFromStorage(key: String, mode: StorageMode, expiration: ExpirationType) -> T? {
+        let container: CacheContainer<T>?
+        
+        switch mode {
+            case .userDefaults(let defaults):
+                guard let data = defaults.data(forKey: key),
+                      let decoded = try? JSONDecoder().decode(CacheContainer<T>.self, from: data) else {
+                    return nil
+                }
+                container = decoded
+                
+            case .keychain(let accessibility):
+                guard let data = KeychainWrapper.standard.data(forKey: key, withAccessibility: accessibility),
+                      let decoded = try? JSONDecoder().decode(CacheContainer<T>.self, from: data) else {
+                    return nil
+                }
+                container = decoded
+                
+            case .memory(let scope):
+                container = MemoryStorage.shared.get(key: key, scope: scope)
+        }
+        
+        guard let container = container else { return nil }
+        
+        // Check expiration
+        guard isValid(container: container, expiration: expiration) else {
+            return nil
+        }
+        
+        return container.value
+    }
+    
+    private static func writeToStorage(key: String, mode: StorageMode, value: T?) {
+        guard let value = value else {
+            self.clearStorage(key: key, mode: mode)
+            return
+        }
+        
+        let container = CacheContainer(value: value, createdAt: Date())
+        
+        switch mode {
+            case .userDefaults(let defaults):
+                if let data = try? JSONEncoder().encode(container) {
+                    defaults.set(data, forKey: key)
+                }
+                
+            case .keychain(let accessibility):
+                if let data = try? JSONEncoder().encode(container) {
+                    KeychainWrapper.standard.set(data, forKey: key, withAccessibility: accessibility)
+                }
+                
+            case .memory(let scope):
+                MemoryStorage.shared.set(key: key, scope: scope, value: container)
         }
     }
     
-    func configureInMemory() {
-        
-        guard case .memory(let scope) = self.mode, scope == .shared else { return }
-        
-        if let sharedKey = sharedMemoryKeyContainer.allObjects
-            .compactMap({ $0 })
-            .first(where: { $0.isEqual(to: self.key) }){
-            self.sharedMemoryKey = sharedKey
-        } else {
-            let sharedMemoryKey = NSString(string: self.key)
-            sharedMemoryKeyContainer.add(sharedMemoryKey)
-            self.sharedMemoryKey = sharedMemoryKey
+    private static func clearStorage(key: String, mode: StorageMode) {
+        switch mode {
+            case .userDefaults(let defaults):
+                defaults.removeObject(forKey: key)
+                
+            case .keychain(let accessibility):
+                KeychainWrapper.standard.removeObject(forKey: key, withAccessibility: accessibility)
+                
+            case .memory(let scope):
+                MemoryStorage.shared.remove(key: key, scope: scope)
         }
     }
     
-    private func isStillValid(cachedAt: Date) -> Bool {
-        
-        switch self.expiration {
+    private static func isValid(container: CacheContainer<T>, expiration: ExpirationType) -> Bool {
+        switch expiration {
             case .none:
                 return true
                 
             case .seconds(let seconds):
-                let expirationTime = cachedAt.addingTimeInterval(seconds)
-                if expirationTime < .nowSafe {
-                    return false
+                let expirationDate = container.createdAt.addingTimeInterval(seconds)
+                return expirationDate > Date.nowSafe
+                
+            case .timestamp(let date):
+                return date > Date.nowSafe
+                
+            case .dayOfWeek(let weekday):
+                let components = DateComponents(calendar: Calendar.daDK, hour: 23, minute: 59, second: 59, weekday: weekday)
+                if let expirationDate = Calendar.daDK.nextDate(after: container.createdAt, matching: components, matchingPolicy: .nextTime) {
+                    return expirationDate > Date.nowSafe
                 }
-            case .dayOfWeek(let dayOfWeek):
+                return true
                 
-                let components = DateComponents(calendar: Calendar.daDK, hour: 23, minute: 59, second: 59, weekday: dayOfWeek)
-                let expirationTime = Calendar.daDK.nextDate(after: cachedAt,
-                                                            matching: components,
-                                                            matchingPolicy: .nextTime)
-                
-                if let expirationTime, expirationTime < .nowSafe {
-                    return false
+            case .hourOfDay(let hour):
+                let components = DateComponents(calendar: Calendar.daDK, hour: hour, minute: 0, second: 0)
+                if let expirationDate = Calendar.daDK.nextDate(after: container.createdAt, matching: components, matchingPolicy: .nextTime) {
+                    return expirationDate > Date.nowSafe
                 }
-                
-            case .hourOfDay(let hourOfDay):
-                
-                let components = DateComponents(calendar: Calendar.daDK, hour: hourOfDay, minute: 0, second: 0)
-                let expirationTime = Calendar.daDK.nextDate(after: cachedAt,
-                                                            matching: components,
-                                                            matchingPolicy: .nextTime)
-                
-                if let expirationTime, expirationTime < .nowSafe {
-                    return false
-                }
-                
-            case .timestamp(let expirationTime):
-                
-                if expirationTime < .nowSafe {
-                    return false
-                }
+                return true
         }
-        return true
     }
-    
-    private func clear() {
-        
-        switch self.mode {
-            case .userDefaults(let defaults):
-                defaults.removeObject(forKey: self.key)
-            case .keychain(let accessibility):
-                KeychainWrapper.standard.removeObject(forKey: self.key, withAccessibility: accessibility)
-            case .memory(let scope):
-                switch scope {
-                    case .singleton:
-                        singletonMemoryContainer[self.key] = nil
-                    case .unique:
-                        self.uniqueMemoryStorage = nil
-                    case .shared:
-                        sharedMemoryValueContainer.removeObject(forKey: self.sharedMemoryKey)
-                }
-        }
-        NotificationCenter.default.post(name: notificationName(key: self.key), object: nil)
-    }
-    
-    // MARK: StorageMode.userDefaults
-    
-    // MARK: StorageMode.keychain
-    
-    // MARK: StorageMode.memory
-    
-    private var uniqueMemoryStorage: CacheContainer<T>? = nil
-    private var sharedMemoryKey: NSString? = nil
-    
-    // MARK: Lifecycle deinit
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self.localeChangeObserver as Any)
-    }
-    
 }
 
+// MARK: - Thread-Safe Memory Storage
 
-
-// MARK: StorageMode.userDefaults
 @available(iOS 13.0, macOS 10.15, *)
-extension StorageCombine {
+private class MemoryStorage {
+    static let shared = MemoryStorage()
     
-    func getUserDefaults(defaults: UserDefaults) -> T? {
-        
-        guard let data = defaults.data(forKey: self.key) else { return nil }
-        
-        guard let cache = try? JSONDecoder().decode(CacheContainer<T>.self, from: data) else { return nil }
-        
-        guard self.isStillValid(cachedAt: cache.createdAt) else {
-            self.clear()
-            return nil
-        }
-        
-        return cache.value
-    }
+    private let lock = NSLock()
+    private var singletonStorage: [String: Any] = [:]
+    private var sharedStorage: NSMapTable<NSString, AnyObject> = .strongToStrongObjects()
     
-    func setUserDefaults(defaults: UserDefaults, value: T?, createdAt: Date = .nowSafe) {
-        if let value = value {
-            let cache = CacheContainer(value: value, createdAt: Date())
-            if let encoded: Data = try? JSONEncoder().encode(cache) {
-                /// Store object
-                defaults.set(encoded, forKey: self.key)
-            }
-        } else {
-            defaults.removeObject(forKey: self.key)
-        }
-        
-        // Avoid sending inital value two times
-        if !self.configured { return }
-        
-        // Sends notification so that subscribers of CurrentValueSubject gets the newest object
-        NotificationCenter.default.post(name: notificationName(key: self.key),
-                                        object: nil,
-                                        userInfo: [self.valueUserInfoKey: value as Any])
-    }
-    
-}
-// MARK: StorageMode.keychain
-@available(iOS 13.0, macOS 10.15, *)
-extension StorageCombine {
-    
-    func getKeychain(accessibility: KeychainItemAccessibility) -> T? {
-        
-        guard let data = KeychainWrapper.standard.data(forKey: self.key, withAccessibility: accessibility) else { return nil }
-        
-        guard let cache = try? JSONDecoder().decode(CacheContainer<T>.self, from: data) else { return nil }
-        
-        guard self.isStillValid(cachedAt: cache.createdAt) else {
-            self.clear()
-            return nil
-        }
-        
-        return cache.value
-    }
-    
-    func setKeychain(accessibility: KeychainItemAccessibility, value: T?) {
-        
-        if let value = value {
-            let cache = CacheContainer(value: value, createdAt: Date())
-            if let encoded: Data = try? JSONEncoder().encode(cache) {
-                
-                /// Store object
-                KeychainWrapper.standard.set(encoded, forKey: self.key)
-                
-            }
-        } else {
-            KeychainWrapper.standard.removeObject(forKey: self.key, withAccessibility: accessibility)
-        }
-        
-        // Avoid sending inital value two times
-        if !self.configured { return }
-        
-        // Sends notification so that subscribers of CurrentValueSubject gets the newest object
-        NotificationCenter.default.post(name: notificationName(key: self.key),
-                                        object: nil,
-                                        userInfo: [self.valueUserInfoKey: value as Any])
-    }
-    
-}
-
-// MARK: StorageMode.memory
-@available(iOS 13.0, macOS 10.15, *)
-extension StorageCombine {
-    
-    func getMemory(scope: MemoryScope) -> T? {
-        
-        var cache: CacheContainer<T>? = nil
+    func get<T: Codable>(key: String, scope: MemoryScope) -> CacheContainer<T>? {
+        lock.lock()
+        defer { lock.unlock() }
         
         switch scope {
             case .singleton:
-                cache = singletonMemoryContainer[self.key] as? CacheContainer<T>
-            case .unique:
-                cache = self.uniqueMemoryStorage
+                return singletonStorage[key] as? CacheContainer<T>
             case .shared:
-                cache = sharedMemoryValueContainer.object(forKey: self.sharedMemoryKey) as? CacheContainer<T>
+                return sharedStorage.object(forKey: key as NSString) as? CacheContainer<T>
+            case .unique:
+                return nil // Unique scope not supported in this architecture
         }
-        
-        guard let cache else { return nil }
-        
-        /// Object has expired, so we remove it from the cache
-        guard self.isStillValid(cachedAt: cache.createdAt) else {
-            self.clear()
-            return nil
-        }
-        
-        return cache.value
     }
     
-    func setMemory(scope: MemoryScope, value: T?) {
+    func set<T: Codable>(key: String, scope: MemoryScope, value: CacheContainer<T>) {
+        lock.lock()
+        defer { lock.unlock() }
+        
         switch scope {
             case .singleton:
-                
-                if let value {
-                    let cache = CacheContainer(value: value, createdAt: Date())
-                    singletonMemoryContainer[self.key] = cache
-                } else {
-                    singletonMemoryContainer[self.key] = nil
-                }            
-                
-                // Avoid sending inital value two times
-                if !self.configured { return }
-                
-                // Sends notification so that subscribers of CurrentValueSubject gets the newest object
-                NotificationCenter.default.post(name: notificationName(key: self.key),
-                                                object: nil,
-                                                userInfo: [self.valueUserInfoKey: value as Any])
-                
-            case .unique:
-                
-                if let value {
-                    let cache = CacheContainer(value: value, createdAt: Date())
-                    self.uniqueMemoryStorage = cache
-                } else {
-                    self.uniqueMemoryStorage = nil
-                }
-                
-                // Avoid sending inital value two times
-                if !self.configured { return }
-                
-                // Sends notification so that subscribers of CurrentValueSubject gets the newest object
-                NotificationCenter.default.post(name: notificationName(key: self.key),
-                                                object: self,
-                                                userInfo: [self.valueUserInfoKey: value as Any])
-                
+                self.singletonStorage[key] = value
             case .shared:
-                
-                if let value = value {
-                    let cache = CacheContainer(value: value, createdAt: Date())
-                    sharedMemoryValueContainer.setObject(cache, forKey: self.sharedMemoryKey)
-                } else {
-                    sharedMemoryValueContainer.removeObject(forKey: self.sharedMemoryKey)
-                }
-                
-                // Avoid sending inital value two times
-                if !self.configured { return }
-                
-                // Sends notification so that subscribers of CurrentValueSubject gets the newest object
-                NotificationCenter.default.post(name: notificationName(key: self.key),
-                                                object: nil,
-                                                userInfo: [self.valueUserInfoKey: value as Any])
-                
-                
+                self.sharedStorage.setObject(value, forKey: key as NSString)
+            case .unique:
+                break // Unique scope not supported
         }
     }
     
+    func remove(key: String, scope: MemoryScope) {
+        lock.lock()
+        defer { lock.unlock() }
+        
+        switch scope {
+            case .singleton:
+                self.singletonStorage[key] = nil
+            case .shared:
+                self.sharedStorage.removeObject(forKey: key as NSString)
+            case .unique:
+                break
+        }
+    }
 }
 
-/// Defines the storage mode to be used
-public enum StorageMode {
-    
-    /// Uses UserDefaults, uses standard if not specified.
-    case userDefaults(defaults: UserDefaults = .standard)
-    
-    /// Uses Keychain.
-    case keychain(accessibility: KeychainItemAccessibility = .afterFirstUnlock)
-    
-    /// Uses Memory.
-    case memory(scope: MemoryScope = .shared)
-    
-}
+// MARK: - Supporting Types
 
-/// Defines the life cycle of the memory storage.
-public enum MemoryScope {
-    
-    /// Shared acros the app, dealocated when no longer used, default if not specified.
-    case shared
-    
-    /// Shared acros the apps lifetime, never deallocated unless app is killed
-    case singleton
-    
-    /// Each instance is unique, same keys does not overwrite, not commenly used
-    case unique
-    
-}
-
-/// Defines the type of expiration used for the storage.
-public enum ExpirationType {
-    
-    /// Seconds after setting the value
-    case seconds(TimeInterval)
-    
-    /// After a day of the week has passed, e.g. 2 equals every monday, 1 equals sunday, based on Calendar Weekday
-    case dayOfWeek(Int)
-    
-    /// After an hour of the day has passed, e.g. every day at 00:00, zero index based which means 0 is 00:00, 1 is 01:00 etc.
-    case hourOfDay(Int)
-    
-    /// At a specific timestamp
-    case timestamp(Date)
-    
-    case none
-    
-}
-
-/// Container used to handle expiration of cached objects
-private class CacheContainer<T: Codable>: Codable {
-    
-    var value: T
-    var createdAt: Date
+/// Container for cached values with creation timestamp
+private class CacheContainer<T: Codable>: NSObject, Codable {
+    let value: T
+    let createdAt: Date
     
     init(value: T, createdAt: Date) {
         self.value = value
         self.createdAt = createdAt
     }
-    
-    static func < (lhs: CacheContainer, rhs: CacheContainer) -> Bool {
-        return lhs.createdAt < rhs.createdAt
-    }
+}
+
+/// Storage mode configuration
+public enum StorageMode {
+    case userDefaults(defaults: UserDefaults = .standard)
+    case keychain(accessibility: KeychainItemAccessibility = .afterFirstUnlock)
+    case memory(scope: MemoryScope = .shared)
+}
+
+/// Memory storage scope
+public enum MemoryScope {
+    case shared      // Shared across app, deallocated when no longer referenced
+    case singleton   // Persists for app lifetime
+    case unique      // Each instance is independent (not implemented in new architecture)
+}
+
+/// Expiration configuration
+public enum ExpirationType {
+    case none
+    case seconds(TimeInterval)
+    case timestamp(Date)
+    case dayOfWeek(Int)
+    case hourOfDay(Int)
 }
