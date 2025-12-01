@@ -61,6 +61,37 @@ public class StorageCombineDefault<T: Codable>: NSObject {
     }
 }
 
+// MARK: - Publisher Center
+
+@available(iOS 13.0, macOS 10.15, *)
+private class PublisherCenter {
+    static let shared = PublisherCenter()
+    private init() {}
+
+    private var publishers: [StorageIdentifier: Any] = [:]
+    private let lock = NSLock()
+
+    func publisher<T: Codable>(for identifier: StorageIdentifier, initialValueProvider: () -> T?) -> CurrentValueSubject<T?, Never> {
+        lock.lock()
+        defer { lock.unlock() }
+
+        if let existingPublisher = publishers[identifier] as? CurrentValueSubject<T?, Never> {
+            return existingPublisher
+        }
+        
+        let value = initialValueProvider()
+        let newPublisher = CurrentValueSubject<T?, Never>(value)
+        publishers[identifier] = newPublisher
+        return newPublisher
+    }
+}
+
+private struct StorageIdentifier: Hashable {
+    let key: String
+    let mode: StorageMode
+}
+
+
 // MARK: - Storage Backend
 
 @available(iOS 13.0, macOS 10.15, *)
@@ -85,24 +116,34 @@ private class StorageBackend<T: Codable> {
         self.mode = mode
         self.expiration = expiration
         
-        // For unique scope, don't read from shared storage
-        let existing: T?
         if case .memory(let scope) = mode, scope == .unique {
-            existing = nil
+            // Unique scope does not share publishers. Each instance is independent.
+            // It starts empty, only populated by the default value if provided.
             if let defaultValue = defaultValue {
                 self.uniqueMemoryStorage = CacheContainer(value: defaultValue, createdAt: Date())
             }
+            self.subject = CurrentValueSubject(defaultValue)
         } else {
-            // Read initial value from storage
-            existing = Self.readFromStorage(key: key, mode: mode, expiration: expiration)
-            
-            // Write default value if needed
-            if existing == nil, let defaultValue = defaultValue {
-                Self.writeToStorage(key: key, mode: mode, value: defaultValue)
+            // For all shared modes, use the PublisherCenter to get a shared publisher.
+            let identifier = StorageIdentifier(key: key, mode: mode)
+            self.subject = PublisherCenter.shared.publisher(for: identifier) {
+                // This closure is only executed once when the publisher is first created
+                // for a given identifier. It reads the initial value from storage
+                // and sets the default value if storage is empty.
+                let existing = Self.readFromStorage(key: key, mode: mode, expiration: expiration)
+                
+                if let existing = existing {
+                    return existing
+                }
+                
+                if let defaultValue = defaultValue {
+                    Self.writeToStorage(key: key, mode: mode, value: defaultValue)
+                    return defaultValue
+                }
+                
+                return nil
             }
         }
-        
-        self.subject = CurrentValueSubject(existing ?? defaultValue)
     }
     
     func getValue() -> T? {
@@ -185,6 +226,7 @@ private class StorageBackend<T: Codable> {
         
         // Check expiration
         guard isValid(container: container, expiration: expiration) else {
+            clearStorage(key: key, mode: mode)
             return nil
         }
         
@@ -277,7 +319,7 @@ private class MemoryStorage {
             case .shared:
                 return sharedStorage.object(forKey: key as NSString) as? CacheContainer<T>
             case .unique:
-                return nil // Unique scope not supported in this architecture
+                return nil // Unique scope is handled inside StorageBackend
         }
     }
     
@@ -291,7 +333,7 @@ private class MemoryStorage {
             case .shared:
                 self.sharedStorage.setObject(value, forKey: key as NSString)
             case .unique:
-                break // Unique scope not supported
+                break // Unique scope is handled inside StorageBackend
         }
     }
     
@@ -324,17 +366,44 @@ private class CacheContainer<T: Codable>: NSObject, Codable {
 }
 
 /// Storage mode configuration
-public enum StorageMode {
+public enum StorageMode: Hashable {
     case userDefaults(defaults: UserDefaults = .standard)
     case keychain(accessibility: KeychainItemAccessibility = .afterFirstUnlock)
     case memory(scope: MemoryScope = .shared)
+
+    public func hash(into hasher: inout Hasher) {
+        switch self {
+        case .userDefaults(let defaults):
+            hasher.combine("userDefaults")
+            hasher.combine(defaults)
+        case .keychain(let accessibility):
+            hasher.combine("keychain")
+            hasher.combine(accessibility)
+        case .memory(let scope):
+            hasher.combine("memory")
+            hasher.combine(scope)
+        }
+    }
+
+    public static func == (lhs: StorageMode, rhs: StorageMode) -> Bool {
+        switch (lhs, rhs) {
+        case (.userDefaults(let l), .userDefaults(let r)):
+            return l == r
+        case (.keychain(let l), .keychain(let r)):
+            return l == r
+        case (.memory(let l), .memory(let r)):
+            return l == r
+        default:
+            return false
+        }
+    }
 }
 
 /// Memory storage scope
-public enum MemoryScope {
+public enum MemoryScope: Hashable {
     case shared      // Shared across app, deallocated when no longer referenced
     case singleton   // Persists for app lifetime
-    case unique      // Each instance is independent (not implemented in new architecture)
+    case unique      // Each instance is independent
 }
 
 /// Expiration configuration
@@ -345,3 +414,4 @@ public enum ExpirationType {
     case dayOfWeek(Int)
     case hourOfDay(Int)
 }
+
