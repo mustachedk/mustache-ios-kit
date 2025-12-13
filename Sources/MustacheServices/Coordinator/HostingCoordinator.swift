@@ -23,11 +23,11 @@ public class HostingCoordinator: ObservableObject {
         self.coordinator.route(to: route)
     }
 
-    func stop() throws {
+    public func stop() throws {
         try self.coordinator.stop()
     }
     
-    func stop(with completion: Completion?) throws {
+    public func stop(with completion: Completion?) throws {
         try self.coordinator.stop(with: completion)
     }
     
