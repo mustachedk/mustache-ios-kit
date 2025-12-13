@@ -22,6 +22,15 @@ public class HostingCoordinator: ObservableObject {
     public func route(to route: any Route) {
         self.coordinator.route(to: route)
     }
+
+    func stop() throws {
+        try self.coordinator.stop()
+    }
+    
+    func stop(with completion: Completion?) throws {
+        try self.coordinator.stop(with: completion)
+    }
+    
     
 }
 
