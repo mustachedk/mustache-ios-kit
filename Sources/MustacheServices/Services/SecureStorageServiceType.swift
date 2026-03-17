@@ -125,7 +125,7 @@ public class SecureStorageService: SecureStorageServiceType {
         return localizedReason
     }
     
-    private var maxPinAttempts: Int = Container.shared.secureStorageMaxPinAttempts()
+    @Injected(\.secureStorageMaxPinAttempts) private var maxPinAttempts: Int
     
     private var key: String
     

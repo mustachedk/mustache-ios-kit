@@ -26,9 +26,9 @@ public class RenewTokenService: RenewTokenServiceType {
                 .share(replay: 1)
     }()
 
-    fileprivate var tokenService: (any TokenServiceType)? = Container.shared.tokenService()
+    @Injected(\.tokenService) fileprivate var tokenService: (any TokenServiceType)?
 
-    fileprivate var credentialsService: (any CredentialsServiceType)? = Container.shared.credentialsService()
+    @Injected(\.credentialsService) fileprivate var credentialsService: (any CredentialsServiceType)?
 
     public init() {}
 

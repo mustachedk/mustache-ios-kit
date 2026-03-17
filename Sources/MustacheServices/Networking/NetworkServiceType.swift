@@ -11,7 +11,7 @@ public protocol NetworkServiceType: AnyObject {
 
 public class NetworkService: NetworkServiceType {
 
-    fileprivate var credentialsService: (any CredentialsServiceType)? = Container.shared.credentialsService()
+    @Injected(\.credentialsService) fileprivate var credentialsService: (any CredentialsServiceType)?
 
     public init() {}
     

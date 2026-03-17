@@ -15,9 +15,9 @@ public protocol RxNetworkServiceType {
 
 public class RxNetworkService: NSObject, RxNetworkServiceType {
 
-    fileprivate var networkService: (any NetworkServiceType)? = Container.shared.networkService()
+    @Injected(\.networkService) fileprivate var networkService: (any NetworkServiceType)?
 
-    fileprivate var renewTokenService: (any RenewTokenServiceType)? = Container.shared.renewTokenService()
+    @Injected(\.renewTokenService) fileprivate var renewTokenService: (any RenewTokenServiceType)?
 
     public override init() {
         super.init()
