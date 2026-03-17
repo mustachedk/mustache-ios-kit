@@ -1,5 +1,6 @@
 
 import Foundation
+import Factory
 import MustacheFoundation
 
 @available(iOS 13.0, macOS 15, *)
@@ -14,16 +15,21 @@ public protocol AsyncTokenServiceType: Actor {
 
 @available(iOS 13.0, macOS 15, *)
 public actor AsyncTokenService: AsyncTokenServiceType {
-    
-    @Injected
-    var credentialsService: AsyncCredentialsServiceType
-    
-    @LazyInjected
-    var refreshTokenService: RefreshTokenServiceType
-        
+
+    private var credentialsService: any AsyncCredentialsServiceType
+
+    // Lazy to break circular dependency with AsyncNetworkService
+    private var _refreshTokenService: (any RefreshTokenServiceType)?
+    private var refreshTokenService: any RefreshTokenServiceType {
+        if _refreshTokenService == nil { _refreshTokenService = Container.shared.refreshTokenService() }
+        return _refreshTokenService!
+    }
+
     var refreshTask: Task<AuthToken, Error>?
-        
-    public init() { }
+
+    public init() {
+        self.credentialsService = Container.shared.asyncCredentialsService()
+    }
     
     public func validToken() async throws -> AuthToken {
         

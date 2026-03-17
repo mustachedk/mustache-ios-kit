@@ -7,6 +7,7 @@ import UIKit
     // Instead of having multiple actions/handlers/closure in different view models for handling transitions, we can now use
     // this wrapper to Inject CoordinatorTypes directly to SwiftUI views using environmentObject()
 
+@MainActor
 public class HostingCoordinator: ObservableObject {
     
     public let coordinator: any CoordinatorType
@@ -41,6 +42,7 @@ public extension HostingCoordinator {
     }
 }
 
+@MainActor
 public class PreviewCoordinator: NSObject, CoordinatorType  {
     
     public var baseController: UIViewController?

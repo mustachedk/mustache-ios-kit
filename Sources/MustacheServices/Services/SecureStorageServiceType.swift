@@ -1,5 +1,6 @@
 
 import Foundation
+import Factory
 import MustacheFoundation
 import LocalAuthentication
 
@@ -124,8 +125,7 @@ public class SecureStorageService: SecureStorageServiceType {
         return localizedReason
     }
     
-    @Injected(name: .maxPinAttempt)
-    private var maxPinAttempts: Int
+    private var maxPinAttempts: Int = Container.shared.secureStorageMaxPinAttempts()
     
     private var key: String
     
@@ -376,11 +376,6 @@ extension SecureStorageService {
     
 }
 
-public extension Resolver.Name {
-    
-    static let maxPinAttempt = Resolver.Name("\(#file)-\(#function)")
-    
-}
 
 public enum UIDStorageMode: String, Codable {
     case pin

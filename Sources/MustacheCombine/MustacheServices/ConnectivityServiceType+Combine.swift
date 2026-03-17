@@ -1,6 +1,7 @@
 
 import Foundation
 import Combine
+import Factory
 
 import MustacheServices
 
@@ -18,15 +19,14 @@ public class CombineConnectivityService: CombineConnectivityServiceType  {
     
     private var handlerSubject = PassthroughSubject<Bool, Never>()
 
-    @Injected
-    private var connectivityService: ConnectivityServiceType
+    @Injected(\.connectivityService) private var connectivityService: (any ConnectivityServiceType)?
     
     public init() {
         self.configure()
     }
     
     private func configure() {
-        self.connectivityService.handler = { [weak self] isConnected in
+        self.connectivityService?.handler = { [weak self] isConnected in
             self?.handlerSubject.send(isConnected)
         }
     }

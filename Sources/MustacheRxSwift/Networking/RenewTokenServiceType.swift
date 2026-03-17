@@ -1,5 +1,6 @@
 
 import Foundation
+import Factory
 
 import MustacheServices
 
@@ -17,16 +18,17 @@ public class RenewTokenService: RenewTokenServiceType {
 
     public lazy var token: RxObservable<Void> = {
         return self.relay
-                .flatMapFirst { _ in self.tokenService.updateToken() }
+                .flatMapFirst { [weak self] _ -> RxObservable<Void> in
+                    guard let tokenService = self?.tokenService else { return .empty() }
+                    return tokenService.updateToken()
+                }
                 .startWith(Void())
                 .share(replay: 1)
     }()
 
-    @Injected
-    fileprivate var tokenService: TokenServiceType
-    
-    @Injected
-    fileprivate var credentialsService: CredentialsServiceType
+    fileprivate var tokenService: (any TokenServiceType)? = Container.shared.tokenService()
+
+    fileprivate var credentialsService: (any CredentialsServiceType)? = Container.shared.credentialsService()
 
     public init() {}
 

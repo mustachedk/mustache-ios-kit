@@ -1,5 +1,6 @@
 
 import Foundation
+import Factory
 
 
 @available(iOS 13.0, macOS 15, *)
@@ -32,13 +33,20 @@ public extension AsyncNetworkServiceType {
 
 @available(iOS 13.0, macOS 15, *)
 public actor AsyncNetworkService: AsyncNetworkServiceType {
-    
-    @LazyInjected
-    var tokenService: AsyncTokenServiceType
-    
-    @LazyInjected
-    var credentialsService: AsyncCredentialsServiceType
-    
+
+    // Lazy to break circular dependency: AsyncNetworkService -> AsyncTokenService -> RefreshTokenServiceType (= AsyncNetworkService)
+    private var _tokenService: (any AsyncTokenServiceType)?
+    private var tokenService: any AsyncTokenServiceType {
+        if _tokenService == nil { _tokenService = Container.shared.asyncTokenService() }
+        return _tokenService!
+    }
+
+    private var _credentialsService: (any AsyncCredentialsServiceType)?
+    private var credentialsService: any AsyncCredentialsServiceType {
+        if _credentialsService == nil { _credentialsService = Container.shared.asyncCredentialsService() }
+        return _credentialsService!
+    }
+
     public init() { }
     
     public func send<T: Decodable>(endpoint: Endpoint, using decoder: JSONDecoder, retries: Int) async throws -> T {

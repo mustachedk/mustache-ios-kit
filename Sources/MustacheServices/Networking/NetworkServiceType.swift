@@ -1,4 +1,5 @@
 import Foundation
+import Factory
 
 public protocol NetworkServiceType: AnyObject {
     
@@ -9,10 +10,9 @@ public protocol NetworkServiceType: AnyObject {
 }
 
 public class NetworkService: NetworkServiceType {
-    
-    @Injected
-    fileprivate var credentialsService: CredentialsServiceType
-    
+
+    fileprivate var credentialsService: (any CredentialsServiceType)? = Container.shared.credentialsService()
+
     public init() {}
     
     public func send<T: Decodable>(endpoint: Endpoint, completionHandler: @escaping (Result<T, Error>) -> ()) -> URLSessionDataTask {
@@ -29,17 +29,17 @@ public class NetworkService: NetworkServiceType {
         var request = endpoint.request()
         
         if endpoint.authentication == .oauth {
-            guard let token = self.credentialsService.oauthToken, token.accessTokenExpiration > Date() else {
+            guard let token = self.credentialsService?.oauthToken, token.accessTokenExpiration > Date() else {
                 completionHandler(.failure(NetworkServiceTypeError.unauthorized(data: nil)))
                 return URLSession.shared.dataTask(with: URL(string: "http://wwww.google.dk")!)
             }
             request.addValue("Bearer \(token.accessToken)", forHTTPHeaderField: "Authorization")
-            
-        } else if endpoint.authentication == .bearer, let token = self.credentialsService.bearer {
-            
+
+        } else if endpoint.authentication == .bearer, let token = self.credentialsService?.bearer {
+
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            
-        } else if endpoint.authentication == .basic, let username = self.credentialsService.username, let password = self.credentialsService.password {
+
+        } else if endpoint.authentication == .basic, let username = self.credentialsService?.username, let password = self.credentialsService?.password {
             
             let raw = String(format: "%@:%@", username, password)
             let data = raw.data(using: .utf8)!

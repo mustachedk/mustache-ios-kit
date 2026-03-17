@@ -1,5 +1,6 @@
 
 import Foundation
+import Factory
 
 import MustacheServices
 
@@ -14,10 +15,9 @@ public protocol RxNetworkServiceType {
 
 public class RxNetworkService: NSObject, RxNetworkServiceType {
 
-    @Injected
-    fileprivate var networkService: NetworkServiceType
+    fileprivate var networkService: (any NetworkServiceType)? = Container.shared.networkService()
 
-    fileprivate var renewTokenService: RenewTokenServiceType? = Resolver.optional()
+    fileprivate var renewTokenService: (any RenewTokenServiceType)? = Container.shared.renewTokenService()
 
     public override init() {
         super.init()
@@ -69,7 +69,12 @@ public class RxNetworkService: NSObject, RxNetworkServiceType {
                         return Disposables.create()
                     }
 
-                    let task = self.networkService.send(endpoint: endpoint, using: decoder, completionHandler: { (result: Result<T, Error>) in
+                    guard let networkService = self.networkService else {
+                        observer(.failure(RxNetworkServiceTypeError.deallocated))
+                        return Disposables.create()
+                    }
+
+                    let task = networkService.send(endpoint: endpoint, using: decoder, completionHandler: { (result: Result<T, Error>) in
 
                         switch result {
                             case .success(let model):

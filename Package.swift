@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "MustacheKit",
-    platforms: [.iOS(.v13), .macOS(.v10_14)],
+    platforms: [.iOS(.v13), .macOS(.v10_15)],
     products: [
         .library(
             name: "MustacheFoundation",
@@ -25,7 +25,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/ReactiveX/RxSwift.git", "6.6.0"..."6.6.0"),
-        .package(url: "https://github.com/onevcat/Kingfisher.git", "7.11.0"..."7.11.0")
+        .package(url: "https://github.com/hmlongco/Factory", exact: "2.5.3"),
     ],
     targets: [
         .target(
@@ -33,12 +33,14 @@ let package = Package(
             dependencies: []),
         .target(
             name: "MustacheServices",
-            dependencies: ["MustacheFoundation"]),
+            dependencies: [
+                "MustacheFoundation",
+                .product(name: "Factory", package: "Factory"),
+            ]),
         .target(
             name: "MustacheUIKit",
             dependencies: [
-                "MustacheFoundation",
-                .product(name: "Kingfisher", package: "Kingfisher")                
+                "MustacheFoundation"                
             ],
             resources: [
                 .copy("Resources/README.md")
@@ -51,11 +53,16 @@ let package = Package(
                 .product(name: "RxRelay", package: "RxSwift"),
                 .product(name: "RxCocoa", package: "RxSwift"),
                 .target(name: "MustacheServices"),
-                .target(name: "MustacheUIKit")
+                .target(name: "MustacheUIKit"),
+                .product(name: "Factory", package: "Factory"),
             ]),
         .target(
             name: "MustacheCombine",
-            dependencies: ["MustacheFoundation", "MustacheServices"]),
+            dependencies: [
+                "MustacheFoundation",
+                "MustacheServices",
+                .product(name: "Factory", package: "Factory"),
+            ]),
         .testTarget(
             name: "MustacheCombineTest",
             dependencies: ["MustacheCombine"]),
