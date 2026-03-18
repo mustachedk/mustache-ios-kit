@@ -3,10 +3,6 @@ import Foundation
 #if os(iOS)
 import UIKit
 
-    // This is a solution to avoid having multiple references to view models in the SwiftUI containing view controllers
-    // Instead of having multiple actions/handlers/closure in different view models for handling transitions, we can now use
-    // this wrapper to Inject CoordinatorTypes directly to SwiftUI views using environmentObject()
-
 @MainActor
 public class HostingCoordinator: ObservableObject {
     

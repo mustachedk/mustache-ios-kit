@@ -6,8 +6,6 @@ import UIKit
 @MainActor
 public protocol CoordinatorType: NSObjectProtocol, ObservableObject {
     
-    var baseController: UIViewController? { get }
-    
     func start() throws
     
     func stop() throws
